@@ -10,29 +10,54 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
+	"github.com/aslape/gofalcon/falcon/client/a_s_p_m"
 	"github.com/aslape/gofalcon/falcon/client/alerts"
 	"github.com/aslape/gofalcon/falcon/client/api_integrations"
+	"github.com/aslape/gofalcon/falcon/client/cao_hunting"
+	"github.com/aslape/gofalcon/falcon/client/case_files"
+	"github.com/aslape/gofalcon/falcon/client/case_management"
+	"github.com/aslape/gofalcon/falcon/client/cases"
+	"github.com/aslape/gofalcon/falcon/client/certificate_based_exclusions"
+	"github.com/aslape/gofalcon/falcon/client/cloud_aws_registration"
+	"github.com/aslape/gofalcon/falcon/client/cloud_azure_registration"
 	"github.com/aslape/gofalcon/falcon/client/cloud_connect_aws"
+	"github.com/aslape/gofalcon/falcon/client/cloud_oci_registration"
+	"github.com/aslape/gofalcon/falcon/client/cloud_policies"
+	"github.com/aslape/gofalcon/falcon/client/cloud_security"
+	"github.com/aslape/gofalcon/falcon/client/cloud_security_assets"
+	"github.com/aslape/gofalcon/falcon/client/cloud_security_compliance"
+	"github.com/aslape/gofalcon/falcon/client/cloud_security_detections"
 	"github.com/aslape/gofalcon/falcon/client/cloud_snapshots"
 	"github.com/aslape/gofalcon/falcon/client/configuration_assessment"
 	"github.com/aslape/gofalcon/falcon/client/configuration_assessment_evaluation_logic"
 	"github.com/aslape/gofalcon/falcon/client/container_alerts"
 	"github.com/aslape/gofalcon/falcon/client/container_detections"
+	"github.com/aslape/gofalcon/falcon/client/container_image_compliance"
 	"github.com/aslape/gofalcon/falcon/client/container_images"
 	"github.com/aslape/gofalcon/falcon/client/container_packages"
 	"github.com/aslape/gofalcon/falcon/client/container_vulnerabilities"
+	"github.com/aslape/gofalcon/falcon/client/content_update_policies"
+	"github.com/aslape/gofalcon/falcon/client/correlation_rules"
+	"github.com/aslape/gofalcon/falcon/client/correlation_rules_admin"
 	"github.com/aslape/gofalcon/falcon/client/cspg_iacapi"
 	"github.com/aslape/gofalcon/falcon/client/cspm_registration"
 	"github.com/aslape/gofalcon/falcon/client/custom_ioa"
 	"github.com/aslape/gofalcon/falcon/client/custom_storage"
 	"github.com/aslape/gofalcon/falcon/client/d4c_registration"
+	"github.com/aslape/gofalcon/falcon/client/data_protection_configuration"
+	"github.com/aslape/gofalcon/falcon/client/delivery_settings"
+	"github.com/aslape/gofalcon/falcon/client/deployments"
 	"github.com/aslape/gofalcon/falcon/client/detects"
+	"github.com/aslape/gofalcon/falcon/client/device_content"
 	"github.com/aslape/gofalcon/falcon/client/device_control_policies"
+	"github.com/aslape/gofalcon/falcon/client/device_control_with_bluetooth"
 	"github.com/aslape/gofalcon/falcon/client/discover"
 	"github.com/aslape/gofalcon/falcon/client/discover_iot"
+	"github.com/aslape/gofalcon/falcon/client/downloads_api"
 	"github.com/aslape/gofalcon/falcon/client/drift_indicators"
 	"github.com/aslape/gofalcon/falcon/client/event_schema"
 	"github.com/aslape/gofalcon/falcon/client/event_streams"
+	"github.com/aslape/gofalcon/falcon/client/execution"
 	"github.com/aslape/gofalcon/falcon/client/exposure_management"
 	"github.com/aslape/gofalcon/falcon/client/falcon_complete_dashboard"
 	"github.com/aslape/gofalcon/falcon/client/falcon_container"
@@ -45,6 +70,7 @@ import (
 	"github.com/aslape/gofalcon/falcon/client/firewall_policies"
 	"github.com/aslape/gofalcon/falcon/client/foundry_logscale"
 	"github.com/aslape/gofalcon/falcon/client/host_group"
+	"github.com/aslape/gofalcon/falcon/client/host_migration"
 	"github.com/aslape/gofalcon/falcon/client/hosts"
 	"github.com/aslape/gofalcon/falcon/client/identity_entities"
 	"github.com/aslape/gofalcon/falcon/client/identity_protection"
@@ -53,36 +79,48 @@ import (
 	"github.com/aslape/gofalcon/falcon/client/installation_tokens"
 	"github.com/aslape/gofalcon/falcon/client/installation_tokens_settings"
 	"github.com/aslape/gofalcon/falcon/client/intel"
+	"github.com/aslape/gofalcon/falcon/client/intelligence_feeds"
+	"github.com/aslape/gofalcon/falcon/client/intelligence_indicator_graph"
 	"github.com/aslape/gofalcon/falcon/client/ioa_exclusions"
 	"github.com/aslape/gofalcon/falcon/client/ioc"
 	"github.com/aslape/gofalcon/falcon/client/iocs"
+	"github.com/aslape/gofalcon/falcon/client/it_automation"
+	"github.com/aslape/gofalcon/falcon/client/kubernetes_container_compliance"
 	"github.com/aslape/gofalcon/falcon/client/kubernetes_protection"
+	"github.com/aslape/gofalcon/falcon/client/lookup_files"
 	"github.com/aslape/gofalcon/falcon/client/malquery"
 	"github.com/aslape/gofalcon/falcon/client/message_center"
 	"github.com/aslape/gofalcon/falcon/client/ml_exclusions"
 	"github.com/aslape/gofalcon/falcon/client/mobile_enrollment"
 	"github.com/aslape/gofalcon/falcon/client/mssp"
+	"github.com/aslape/gofalcon/falcon/client/ngsiem"
 	"github.com/aslape/gofalcon/falcon/client/oauth2"
 	"github.com/aslape/gofalcon/falcon/client/ods"
 	"github.com/aslape/gofalcon/falcon/client/operations"
-	"github.com/aslape/gofalcon/falcon/client/overwatch_dashboard"
 	"github.com/aslape/gofalcon/falcon/client/prevention_policies"
 	"github.com/aslape/gofalcon/falcon/client/quarantine"
 	"github.com/aslape/gofalcon/falcon/client/quick_scan"
+	"github.com/aslape/gofalcon/falcon/client/quick_scan_pro"
 	"github.com/aslape/gofalcon/falcon/client/real_time_response"
 	"github.com/aslape/gofalcon/falcon/client/real_time_response_admin"
 	"github.com/aslape/gofalcon/falcon/client/real_time_response_audit"
 	"github.com/aslape/gofalcon/falcon/client/recon"
+	"github.com/aslape/gofalcon/falcon/client/release_notes"
+	"github.com/aslape/gofalcon/falcon/client/releases"
 	"github.com/aslape/gofalcon/falcon/client/report_executions"
 	"github.com/aslape/gofalcon/falcon/client/response_policies"
 	"github.com/aslape/gofalcon/falcon/client/runtime_detections"
+	"github.com/aslape/gofalcon/falcon/client/saas_security"
 	"github.com/aslape/gofalcon/falcon/client/sample_uploads"
 	"github.com/aslape/gofalcon/falcon/client/scheduled_reports"
 	"github.com/aslape/gofalcon/falcon/client/sensor_download"
 	"github.com/aslape/gofalcon/falcon/client/sensor_update_policies"
+	"github.com/aslape/gofalcon/falcon/client/sensor_usage_api"
 	"github.com/aslape/gofalcon/falcon/client/sensor_visibility_exclusions"
+	"github.com/aslape/gofalcon/falcon/client/serverless_vulnerabilities"
 	"github.com/aslape/gofalcon/falcon/client/spotlight_evaluation_logic"
 	"github.com/aslape/gofalcon/falcon/client/spotlight_vulnerabilities"
+	"github.com/aslape/gofalcon/falcon/client/spotlight_vulnerability_metadata"
 	"github.com/aslape/gofalcon/falcon/client/tailored_intelligence"
 	"github.com/aslape/gofalcon/falcon/client/threatgraph"
 	"github.com/aslape/gofalcon/falcon/client/unidentified_containers"
@@ -133,29 +171,54 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CrowdStrik
 
 	cli := new(CrowdStrikeAPISpecification)
 	cli.Transport = transport
+	cli.Aspm = a_s_p_m.New(transport, formats)
 	cli.Alerts = alerts.New(transport, formats)
 	cli.APIIntegrations = api_integrations.New(transport, formats)
+	cli.CaoHunting = cao_hunting.New(transport, formats)
+	cli.CaseFiles = case_files.New(transport, formats)
+	cli.CaseManagement = case_management.New(transport, formats)
+	cli.Cases = cases.New(transport, formats)
+	cli.CertificateBasedExclusions = certificate_based_exclusions.New(transport, formats)
+	cli.CloudAwsRegistration = cloud_aws_registration.New(transport, formats)
+	cli.CloudAzureRegistration = cloud_azure_registration.New(transport, formats)
 	cli.CloudConnectAws = cloud_connect_aws.New(transport, formats)
+	cli.CloudOciRegistration = cloud_oci_registration.New(transport, formats)
+	cli.CloudPolicies = cloud_policies.New(transport, formats)
+	cli.CloudSecurity = cloud_security.New(transport, formats)
+	cli.CloudSecurityAssets = cloud_security_assets.New(transport, formats)
+	cli.CloudSecurityCompliance = cloud_security_compliance.New(transport, formats)
+	cli.CloudSecurityDetections = cloud_security_detections.New(transport, formats)
 	cli.CloudSnapshots = cloud_snapshots.New(transport, formats)
 	cli.ConfigurationAssessment = configuration_assessment.New(transport, formats)
 	cli.ConfigurationAssessmentEvaluationLogic = configuration_assessment_evaluation_logic.New(transport, formats)
 	cli.ContainerAlerts = container_alerts.New(transport, formats)
 	cli.ContainerDetections = container_detections.New(transport, formats)
+	cli.ContainerImageCompliance = container_image_compliance.New(transport, formats)
 	cli.ContainerImages = container_images.New(transport, formats)
 	cli.ContainerPackages = container_packages.New(transport, formats)
 	cli.ContainerVulnerabilities = container_vulnerabilities.New(transport, formats)
+	cli.ContentUpdatePolicies = content_update_policies.New(transport, formats)
+	cli.CorrelationRules = correlation_rules.New(transport, formats)
+	cli.CorrelationRulesAdmin = correlation_rules_admin.New(transport, formats)
 	cli.CspgIacapi = cspg_iacapi.New(transport, formats)
 	cli.CspmRegistration = cspm_registration.New(transport, formats)
 	cli.CustomIoa = custom_ioa.New(transport, formats)
 	cli.CustomStorage = custom_storage.New(transport, formats)
 	cli.D4cRegistration = d4c_registration.New(transport, formats)
+	cli.DataProtectionConfiguration = data_protection_configuration.New(transport, formats)
+	cli.DeliverySettings = delivery_settings.New(transport, formats)
+	cli.Deployments = deployments.New(transport, formats)
 	cli.Detects = detects.New(transport, formats)
+	cli.DeviceContent = device_content.New(transport, formats)
 	cli.DeviceControlPolicies = device_control_policies.New(transport, formats)
+	cli.DeviceControlWithBluetooth = device_control_with_bluetooth.New(transport, formats)
 	cli.Discover = discover.New(transport, formats)
 	cli.DiscoverIot = discover_iot.New(transport, formats)
+	cli.DownloadsAPI = downloads_api.New(transport, formats)
 	cli.DriftIndicators = drift_indicators.New(transport, formats)
 	cli.EventSchema = event_schema.New(transport, formats)
 	cli.EventStreams = event_streams.New(transport, formats)
+	cli.Execution = execution.New(transport, formats)
 	cli.ExposureManagement = exposure_management.New(transport, formats)
 	cli.FalconCompleteDashboard = falcon_complete_dashboard.New(transport, formats)
 	cli.FalconContainer = falcon_container.New(transport, formats)
@@ -168,6 +231,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CrowdStrik
 	cli.FirewallPolicies = firewall_policies.New(transport, formats)
 	cli.FoundryLogscale = foundry_logscale.New(transport, formats)
 	cli.HostGroup = host_group.New(transport, formats)
+	cli.HostMigration = host_migration.New(transport, formats)
 	cli.Hosts = hosts.New(transport, formats)
 	cli.IdentityEntities = identity_entities.New(transport, formats)
 	cli.IdentityProtection = identity_protection.New(transport, formats)
@@ -176,36 +240,48 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CrowdStrik
 	cli.InstallationTokens = installation_tokens.New(transport, formats)
 	cli.InstallationTokensSettings = installation_tokens_settings.New(transport, formats)
 	cli.Intel = intel.New(transport, formats)
+	cli.IntelligenceFeeds = intelligence_feeds.New(transport, formats)
+	cli.IntelligenceIndicatorGraph = intelligence_indicator_graph.New(transport, formats)
 	cli.IoaExclusions = ioa_exclusions.New(transport, formats)
 	cli.Ioc = ioc.New(transport, formats)
 	cli.Iocs = iocs.New(transport, formats)
+	cli.ItAutomation = it_automation.New(transport, formats)
+	cli.KubernetesContainerCompliance = kubernetes_container_compliance.New(transport, formats)
 	cli.KubernetesProtection = kubernetes_protection.New(transport, formats)
+	cli.LookupFiles = lookup_files.New(transport, formats)
 	cli.Malquery = malquery.New(transport, formats)
 	cli.MessageCenter = message_center.New(transport, formats)
 	cli.MlExclusions = ml_exclusions.New(transport, formats)
 	cli.MobileEnrollment = mobile_enrollment.New(transport, formats)
 	cli.Mssp = mssp.New(transport, formats)
+	cli.Ngsiem = ngsiem.New(transport, formats)
 	cli.Oauth2 = oauth2.New(transport, formats)
 	cli.Ods = ods.New(transport, formats)
 	cli.Operations = operations.New(transport, formats)
-	cli.OverwatchDashboard = overwatch_dashboard.New(transport, formats)
 	cli.PreventionPolicies = prevention_policies.New(transport, formats)
 	cli.Quarantine = quarantine.New(transport, formats)
 	cli.QuickScan = quick_scan.New(transport, formats)
+	cli.QuickScanPro = quick_scan_pro.New(transport, formats)
 	cli.RealTimeResponse = real_time_response.New(transport, formats)
 	cli.RealTimeResponseAdmin = real_time_response_admin.New(transport, formats)
 	cli.RealTimeResponseAudit = real_time_response_audit.New(transport, formats)
 	cli.Recon = recon.New(transport, formats)
+	cli.ReleaseNotes = release_notes.New(transport, formats)
+	cli.Releases = releases.New(transport, formats)
 	cli.ReportExecutions = report_executions.New(transport, formats)
 	cli.ResponsePolicies = response_policies.New(transport, formats)
 	cli.RuntimeDetections = runtime_detections.New(transport, formats)
+	cli.SaasSecurity = saas_security.New(transport, formats)
 	cli.SampleUploads = sample_uploads.New(transport, formats)
 	cli.ScheduledReports = scheduled_reports.New(transport, formats)
 	cli.SensorDownload = sensor_download.New(transport, formats)
 	cli.SensorUpdatePolicies = sensor_update_policies.New(transport, formats)
+	cli.SensorUsageAPI = sensor_usage_api.New(transport, formats)
 	cli.SensorVisibilityExclusions = sensor_visibility_exclusions.New(transport, formats)
+	cli.ServerlessVulnerabilities = serverless_vulnerabilities.New(transport, formats)
 	cli.SpotlightEvaluationLogic = spotlight_evaluation_logic.New(transport, formats)
 	cli.SpotlightVulnerabilities = spotlight_vulnerabilities.New(transport, formats)
+	cli.SpotlightVulnerabilityMetadata = spotlight_vulnerability_metadata.New(transport, formats)
 	cli.TailoredIntelligence = tailored_intelligence.New(transport, formats)
 	cli.Threatgraph = threatgraph.New(transport, formats)
 	cli.UnidentifiedContainers = unidentified_containers.New(transport, formats)
@@ -256,11 +332,39 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // CrowdStrikeAPISpecification is a client for crowd strike API specification
 type CrowdStrikeAPISpecification struct {
+	Aspm a_s_p_m.ClientService
+
 	Alerts alerts.ClientService
 
 	APIIntegrations api_integrations.ClientService
 
+	CaoHunting cao_hunting.ClientService
+
+	CaseFiles case_files.ClientService
+
+	CaseManagement case_management.ClientService
+
+	Cases cases.ClientService
+
+	CertificateBasedExclusions certificate_based_exclusions.ClientService
+
+	CloudAwsRegistration cloud_aws_registration.ClientService
+
+	CloudAzureRegistration cloud_azure_registration.ClientService
+
 	CloudConnectAws cloud_connect_aws.ClientService
+
+	CloudOciRegistration cloud_oci_registration.ClientService
+
+	CloudPolicies cloud_policies.ClientService
+
+	CloudSecurity cloud_security.ClientService
+
+	CloudSecurityAssets cloud_security_assets.ClientService
+
+	CloudSecurityCompliance cloud_security_compliance.ClientService
+
+	CloudSecurityDetections cloud_security_detections.ClientService
 
 	CloudSnapshots cloud_snapshots.ClientService
 
@@ -272,11 +376,19 @@ type CrowdStrikeAPISpecification struct {
 
 	ContainerDetections container_detections.ClientService
 
+	ContainerImageCompliance container_image_compliance.ClientService
+
 	ContainerImages container_images.ClientService
 
 	ContainerPackages container_packages.ClientService
 
 	ContainerVulnerabilities container_vulnerabilities.ClientService
+
+	ContentUpdatePolicies content_update_policies.ClientService
+
+	CorrelationRules correlation_rules.ClientService
+
+	CorrelationRulesAdmin correlation_rules_admin.ClientService
 
 	CspgIacapi cspg_iacapi.ClientService
 
@@ -288,19 +400,33 @@ type CrowdStrikeAPISpecification struct {
 
 	D4cRegistration d4c_registration.ClientService
 
+	DataProtectionConfiguration data_protection_configuration.ClientService
+
+	DeliverySettings delivery_settings.ClientService
+
+	Deployments deployments.ClientService
+
 	Detects detects.ClientService
 
+	DeviceContent device_content.ClientService
+
 	DeviceControlPolicies device_control_policies.ClientService
+
+	DeviceControlWithBluetooth device_control_with_bluetooth.ClientService
 
 	Discover discover.ClientService
 
 	DiscoverIot discover_iot.ClientService
+
+	DownloadsAPI downloads_api.ClientService
 
 	DriftIndicators drift_indicators.ClientService
 
 	EventSchema event_schema.ClientService
 
 	EventStreams event_streams.ClientService
+
+	Execution execution.ClientService
 
 	ExposureManagement exposure_management.ClientService
 
@@ -326,6 +452,8 @@ type CrowdStrikeAPISpecification struct {
 
 	HostGroup host_group.ClientService
 
+	HostMigration host_migration.ClientService
+
 	Hosts hosts.ClientService
 
 	IdentityEntities identity_entities.ClientService
@@ -342,13 +470,23 @@ type CrowdStrikeAPISpecification struct {
 
 	Intel intel.ClientService
 
+	IntelligenceFeeds intelligence_feeds.ClientService
+
+	IntelligenceIndicatorGraph intelligence_indicator_graph.ClientService
+
 	IoaExclusions ioa_exclusions.ClientService
 
 	Ioc ioc.ClientService
 
 	Iocs iocs.ClientService
 
+	ItAutomation it_automation.ClientService
+
+	KubernetesContainerCompliance kubernetes_container_compliance.ClientService
+
 	KubernetesProtection kubernetes_protection.ClientService
+
+	LookupFiles lookup_files.ClientService
 
 	Malquery malquery.ClientService
 
@@ -360,19 +498,21 @@ type CrowdStrikeAPISpecification struct {
 
 	Mssp mssp.ClientService
 
+	Ngsiem ngsiem.ClientService
+
 	Oauth2 oauth2.ClientService
 
 	Ods ods.ClientService
 
 	Operations operations.ClientService
 
-	OverwatchDashboard overwatch_dashboard.ClientService
-
 	PreventionPolicies prevention_policies.ClientService
 
 	Quarantine quarantine.ClientService
 
 	QuickScan quick_scan.ClientService
+
+	QuickScanPro quick_scan_pro.ClientService
 
 	RealTimeResponse real_time_response.ClientService
 
@@ -382,11 +522,17 @@ type CrowdStrikeAPISpecification struct {
 
 	Recon recon.ClientService
 
+	ReleaseNotes release_notes.ClientService
+
+	Releases releases.ClientService
+
 	ReportExecutions report_executions.ClientService
 
 	ResponsePolicies response_policies.ClientService
 
 	RuntimeDetections runtime_detections.ClientService
+
+	SaasSecurity saas_security.ClientService
 
 	SampleUploads sample_uploads.ClientService
 
@@ -396,11 +542,17 @@ type CrowdStrikeAPISpecification struct {
 
 	SensorUpdatePolicies sensor_update_policies.ClientService
 
+	SensorUsageAPI sensor_usage_api.ClientService
+
 	SensorVisibilityExclusions sensor_visibility_exclusions.ClientService
+
+	ServerlessVulnerabilities serverless_vulnerabilities.ClientService
 
 	SpotlightEvaluationLogic spotlight_evaluation_logic.ClientService
 
 	SpotlightVulnerabilities spotlight_vulnerabilities.ClientService
+
+	SpotlightVulnerabilityMetadata spotlight_vulnerability_metadata.ClientService
 
 	TailoredIntelligence tailored_intelligence.ClientService
 
@@ -420,29 +572,54 @@ type CrowdStrikeAPISpecification struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *CrowdStrikeAPISpecification) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
+	c.Aspm.SetTransport(transport)
 	c.Alerts.SetTransport(transport)
 	c.APIIntegrations.SetTransport(transport)
+	c.CaoHunting.SetTransport(transport)
+	c.CaseFiles.SetTransport(transport)
+	c.CaseManagement.SetTransport(transport)
+	c.Cases.SetTransport(transport)
+	c.CertificateBasedExclusions.SetTransport(transport)
+	c.CloudAwsRegistration.SetTransport(transport)
+	c.CloudAzureRegistration.SetTransport(transport)
 	c.CloudConnectAws.SetTransport(transport)
+	c.CloudOciRegistration.SetTransport(transport)
+	c.CloudPolicies.SetTransport(transport)
+	c.CloudSecurity.SetTransport(transport)
+	c.CloudSecurityAssets.SetTransport(transport)
+	c.CloudSecurityCompliance.SetTransport(transport)
+	c.CloudSecurityDetections.SetTransport(transport)
 	c.CloudSnapshots.SetTransport(transport)
 	c.ConfigurationAssessment.SetTransport(transport)
 	c.ConfigurationAssessmentEvaluationLogic.SetTransport(transport)
 	c.ContainerAlerts.SetTransport(transport)
 	c.ContainerDetections.SetTransport(transport)
+	c.ContainerImageCompliance.SetTransport(transport)
 	c.ContainerImages.SetTransport(transport)
 	c.ContainerPackages.SetTransport(transport)
 	c.ContainerVulnerabilities.SetTransport(transport)
+	c.ContentUpdatePolicies.SetTransport(transport)
+	c.CorrelationRules.SetTransport(transport)
+	c.CorrelationRulesAdmin.SetTransport(transport)
 	c.CspgIacapi.SetTransport(transport)
 	c.CspmRegistration.SetTransport(transport)
 	c.CustomIoa.SetTransport(transport)
 	c.CustomStorage.SetTransport(transport)
 	c.D4cRegistration.SetTransport(transport)
+	c.DataProtectionConfiguration.SetTransport(transport)
+	c.DeliverySettings.SetTransport(transport)
+	c.Deployments.SetTransport(transport)
 	c.Detects.SetTransport(transport)
+	c.DeviceContent.SetTransport(transport)
 	c.DeviceControlPolicies.SetTransport(transport)
+	c.DeviceControlWithBluetooth.SetTransport(transport)
 	c.Discover.SetTransport(transport)
 	c.DiscoverIot.SetTransport(transport)
+	c.DownloadsAPI.SetTransport(transport)
 	c.DriftIndicators.SetTransport(transport)
 	c.EventSchema.SetTransport(transport)
 	c.EventStreams.SetTransport(transport)
+	c.Execution.SetTransport(transport)
 	c.ExposureManagement.SetTransport(transport)
 	c.FalconCompleteDashboard.SetTransport(transport)
 	c.FalconContainer.SetTransport(transport)
@@ -455,6 +632,7 @@ func (c *CrowdStrikeAPISpecification) SetTransport(transport runtime.ClientTrans
 	c.FirewallPolicies.SetTransport(transport)
 	c.FoundryLogscale.SetTransport(transport)
 	c.HostGroup.SetTransport(transport)
+	c.HostMigration.SetTransport(transport)
 	c.Hosts.SetTransport(transport)
 	c.IdentityEntities.SetTransport(transport)
 	c.IdentityProtection.SetTransport(transport)
@@ -463,36 +641,48 @@ func (c *CrowdStrikeAPISpecification) SetTransport(transport runtime.ClientTrans
 	c.InstallationTokens.SetTransport(transport)
 	c.InstallationTokensSettings.SetTransport(transport)
 	c.Intel.SetTransport(transport)
+	c.IntelligenceFeeds.SetTransport(transport)
+	c.IntelligenceIndicatorGraph.SetTransport(transport)
 	c.IoaExclusions.SetTransport(transport)
 	c.Ioc.SetTransport(transport)
 	c.Iocs.SetTransport(transport)
+	c.ItAutomation.SetTransport(transport)
+	c.KubernetesContainerCompliance.SetTransport(transport)
 	c.KubernetesProtection.SetTransport(transport)
+	c.LookupFiles.SetTransport(transport)
 	c.Malquery.SetTransport(transport)
 	c.MessageCenter.SetTransport(transport)
 	c.MlExclusions.SetTransport(transport)
 	c.MobileEnrollment.SetTransport(transport)
 	c.Mssp.SetTransport(transport)
+	c.Ngsiem.SetTransport(transport)
 	c.Oauth2.SetTransport(transport)
 	c.Ods.SetTransport(transport)
 	c.Operations.SetTransport(transport)
-	c.OverwatchDashboard.SetTransport(transport)
 	c.PreventionPolicies.SetTransport(transport)
 	c.Quarantine.SetTransport(transport)
 	c.QuickScan.SetTransport(transport)
+	c.QuickScanPro.SetTransport(transport)
 	c.RealTimeResponse.SetTransport(transport)
 	c.RealTimeResponseAdmin.SetTransport(transport)
 	c.RealTimeResponseAudit.SetTransport(transport)
 	c.Recon.SetTransport(transport)
+	c.ReleaseNotes.SetTransport(transport)
+	c.Releases.SetTransport(transport)
 	c.ReportExecutions.SetTransport(transport)
 	c.ResponsePolicies.SetTransport(transport)
 	c.RuntimeDetections.SetTransport(transport)
+	c.SaasSecurity.SetTransport(transport)
 	c.SampleUploads.SetTransport(transport)
 	c.ScheduledReports.SetTransport(transport)
 	c.SensorDownload.SetTransport(transport)
 	c.SensorUpdatePolicies.SetTransport(transport)
+	c.SensorUsageAPI.SetTransport(transport)
 	c.SensorVisibilityExclusions.SetTransport(transport)
+	c.ServerlessVulnerabilities.SetTransport(transport)
 	c.SpotlightEvaluationLogic.SetTransport(transport)
 	c.SpotlightVulnerabilities.SetTransport(transport)
+	c.SpotlightVulnerabilityMetadata.SetTransport(transport)
 	c.TailoredIntelligence.SetTransport(transport)
 	c.Threatgraph.SetTransport(transport)
 	c.UnidentifiedContainers.SetTransport(transport)

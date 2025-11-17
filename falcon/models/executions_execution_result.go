@@ -32,6 +32,10 @@ type ExecutionsExecutionResult struct {
 	// Required: true
 	DefinitionID *string `json:"definition_id"`
 
+	// The name of the workflow the execution is associated with.
+	// Required: true
+	DefinitionName *string `json:"definition_name"`
+
 	// Version of the definition that executed.
 	// Required: true
 	DefinitionVersion *int32 `json:"definition_version"`
@@ -44,9 +48,15 @@ type ExecutionsExecutionResult struct {
 	// Required: true
 	ExecutionID *string `json:"execution_id"`
 
+	// Details for the result of each flow node.
+	Flows []*ExecutionsFlowExecutionResult `json:"flows"`
+
 	// Details for the results of each loop in the workflow definition.
 	// Required: true
 	Loops []*ExecutionsLoopResult `json:"loops"`
+
+	// Output from this workflow execution
+	OutputData interface{} `json:"output_data,omitempty"`
 
 	// A boolean value indicating whether the failed workflow execution is retryable
 	// Required: true
@@ -60,6 +70,9 @@ type ExecutionsExecutionResult struct {
 	// Overall status for the execution.
 	// Required: true
 	Status *string `json:"status"`
+
+	// Execution summary if defined in the workflow definition
+	Summary string `json:"summary,omitempty"`
 
 	// Details for the result of the trigger node
 	// Required: true
@@ -82,6 +95,10 @@ func (m *ExecutionsExecutionResult) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDefinitionName(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDefinitionVersion(formats); err != nil {
 		res = append(res, err)
 	}
@@ -91,6 +108,10 @@ func (m *ExecutionsExecutionResult) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateExecutionID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFlows(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -183,6 +204,15 @@ func (m *ExecutionsExecutionResult) validateDefinitionID(formats strfmt.Registry
 	return nil
 }
 
+func (m *ExecutionsExecutionResult) validateDefinitionName(formats strfmt.Registry) error {
+
+	if err := validate.Required("definition_name", "body", m.DefinitionName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *ExecutionsExecutionResult) validateDefinitionVersion(formats strfmt.Registry) error {
 
 	if err := validate.Required("definition_version", "body", m.DefinitionVersion); err != nil {
@@ -208,6 +238,32 @@ func (m *ExecutionsExecutionResult) validateExecutionID(formats strfmt.Registry)
 
 	if err := validate.Required("execution_id", "body", m.ExecutionID); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *ExecutionsExecutionResult) validateFlows(formats strfmt.Registry) error {
+	if swag.IsZero(m.Flows) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Flows); i++ {
+		if swag.IsZero(m.Flows[i]) { // not required
+			continue
+		}
+
+		if m.Flows[i] != nil {
+			if err := m.Flows[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("flows" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("flows" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -303,6 +359,10 @@ func (m *ExecutionsExecutionResult) ContextValidate(ctx context.Context, formats
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateFlows(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateLoops(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -357,6 +417,31 @@ func (m *ExecutionsExecutionResult) contextValidateAncestorExecutions(ctx contex
 					return ve.ValidateName("ancestor_executions" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("ancestor_executions" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *ExecutionsExecutionResult) contextValidateFlows(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Flows); i++ {
+
+		if m.Flows[i] != nil {
+
+			if swag.IsZero(m.Flows[i]) { // not required
+				return nil
+			}
+
+			if err := m.Flows[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("flows" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("flows" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

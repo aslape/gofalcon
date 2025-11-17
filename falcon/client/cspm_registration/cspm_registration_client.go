@@ -32,6 +32,8 @@ type ClientOption func(*runtime.ClientOperation)
 type ClientService interface {
 	AzureDownloadCertificate(params *AzureDownloadCertificateParams, opts ...ClientOption) (*AzureDownloadCertificateOK, error)
 
+	AzureRefreshCertificate(params *AzureRefreshCertificateParams, opts ...ClientOption) (*AzureRefreshCertificateOK, error)
+
 	ConnectCSPMGCPAccount(params *ConnectCSPMGCPAccountParams, opts ...ClientOption) (*ConnectCSPMGCPAccountCreated, *ConnectCSPMGCPAccountMultiStatus, error)
 
 	CreateCSPMAwsAccount(params *CreateCSPMAwsAccountParams, opts ...ClientOption) (*CreateCSPMAwsAccountCreated, *CreateCSPMAwsAccountMultiStatus, error)
@@ -53,8 +55,6 @@ type ClientService interface {
 	GetBehaviorDetections(params *GetBehaviorDetectionsParams, opts ...ClientOption) (*GetBehaviorDetectionsOK, error)
 
 	GetCSPMAwsAccount(params *GetCSPMAwsAccountParams, opts ...ClientOption) (*GetCSPMAwsAccountOK, *GetCSPMAwsAccountMultiStatus, error)
-
-	GetCSPMAwsAccountScriptsAttachment(params *GetCSPMAwsAccountScriptsAttachmentParams, opts ...ClientOption) (*GetCSPMAwsAccountScriptsAttachmentOK, error)
 
 	GetCSPMAwsConsoleSetupURLs(params *GetCSPMAwsConsoleSetupURLsParams, opts ...ClientOption) (*GetCSPMAwsConsoleSetupURLsOK, *GetCSPMAwsConsoleSetupURLsMultiStatus, error)
 
@@ -86,7 +86,7 @@ type ClientService interface {
 
 	GetConfigurationDetections(params *GetConfigurationDetectionsParams, opts ...ClientOption) (*GetConfigurationDetectionsOK, error)
 
-	PatchCSPMAwsAccount(params *PatchCSPMAwsAccountParams, opts ...ClientOption) (*PatchCSPMAwsAccountCreated, *PatchCSPMAwsAccountMultiStatus, error)
+	PatchCSPMAwsAccount(params *PatchCSPMAwsAccountParams, opts ...ClientOption) (*PatchCSPMAwsAccountOK, *PatchCSPMAwsAccountMultiStatus, error)
 
 	UpdateCSPMAzureAccount(params *UpdateCSPMAzureAccountParams, opts ...ClientOption) (*UpdateCSPMAzureAccountCreated, *UpdateCSPMAzureAccountMultiStatus, error)
 
@@ -103,6 +103,8 @@ type ClientService interface {
 	UpdateCSPMScanSchedule(params *UpdateCSPMScanScheduleParams, opts ...ClientOption) (*UpdateCSPMScanScheduleOK, error)
 
 	ValidateCSPMGCPServiceAccountExt(params *ValidateCSPMGCPServiceAccountExtParams, opts ...ClientOption) (*ValidateCSPMGCPServiceAccountExtOK, *ValidateCSPMGCPServiceAccountExtMultiStatus, error)
+
+	GetCloudEventIDs(params *GetCloudEventIDsParams, opts ...ClientOption) (*GetCloudEventIDsOK, *GetCloudEventIDsMultiStatus, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -142,6 +144,44 @@ func (a *Client) AzureDownloadCertificate(params *AzureDownloadCertificateParams
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for AzureDownloadCertificate: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+AzureRefreshCertificate refreshes certificate and returns JSON object s that contain the base64 encoded certificate for a service principal
+*/
+func (a *Client) AzureRefreshCertificate(params *AzureRefreshCertificateParams, opts ...ClientOption) (*AzureRefreshCertificateOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewAzureRefreshCertificateParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "AzureRefreshCertificate",
+		Method:             "POST",
+		PathPattern:        "/cloud-connect-cspm-azure/entities/refresh-certificate/v1",
+		ProducesMediaTypes: []string{"application/json", "application/octet-stream"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &AzureRefreshCertificateReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*AzureRefreshCertificateOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for AzureRefreshCertificate: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -570,44 +610,6 @@ func (a *Client) GetCSPMAwsAccount(params *GetCSPMAwsAccountParams, opts ...Clie
 	}
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for cspm_registration: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-GetCSPMAwsAccountScriptsAttachment returns a script for customer to run in their cloud environment to grant us access to their a w s environment as a downloadable attachment
-*/
-func (a *Client) GetCSPMAwsAccountScriptsAttachment(params *GetCSPMAwsAccountScriptsAttachmentParams, opts ...ClientOption) (*GetCSPMAwsAccountScriptsAttachmentOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewGetCSPMAwsAccountScriptsAttachmentParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "GetCSPMAwsAccountScriptsAttachment",
-		Method:             "GET",
-		PathPattern:        "/cloud-connect-cspm-aws/entities/user-scripts-download/v1",
-		ProducesMediaTypes: []string{"application/json", "application/octet-stream"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
-		Params:             params,
-		Reader:             &GetCSPMAwsAccountScriptsAttachmentReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*GetCSPMAwsAccountScriptsAttachmentOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for GetCSPMAwsAccountScriptsAttachment: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -1191,7 +1193,7 @@ func (a *Client) GetConfigurationDetections(params *GetConfigurationDetectionsPa
 /*
 PatchCSPMAwsAccount patches a existing account in our system for a customer
 */
-func (a *Client) PatchCSPMAwsAccount(params *PatchCSPMAwsAccountParams, opts ...ClientOption) (*PatchCSPMAwsAccountCreated, *PatchCSPMAwsAccountMultiStatus, error) {
+func (a *Client) PatchCSPMAwsAccount(params *PatchCSPMAwsAccountParams, opts ...ClientOption) (*PatchCSPMAwsAccountOK, *PatchCSPMAwsAccountMultiStatus, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPatchCSPMAwsAccountParams()
@@ -1217,7 +1219,7 @@ func (a *Client) PatchCSPMAwsAccount(params *PatchCSPMAwsAccountParams, opts ...
 		return nil, nil, err
 	}
 	switch value := result.(type) {
-	case *PatchCSPMAwsAccountCreated:
+	case *PatchCSPMAwsAccountOK:
 		return value, nil, nil
 	case *PatchCSPMAwsAccountMultiStatus:
 		return nil, value, nil
@@ -1528,6 +1530,45 @@ func (a *Client) ValidateCSPMGCPServiceAccountExt(params *ValidateCSPMGCPService
 	case *ValidateCSPMGCPServiceAccountExtOK:
 		return value, nil, nil
 	case *ValidateCSPMGCPServiceAccountExtMultiStatus:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for cspm_registration: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetCloudEventIDs gets list of related cloud event log scale i ds for a given i o a
+*/
+func (a *Client) GetCloudEventIDs(params *GetCloudEventIDsParams, opts ...ClientOption) (*GetCloudEventIDsOK, *GetCloudEventIDsMultiStatus, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetCloudEventIDsParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "getCloudEventIDs",
+		Method:             "GET",
+		PathPattern:        "/detects/queries/cloud-events/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetCloudEventIDsReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *GetCloudEventIDsOK:
+		return value, nil, nil
+	case *GetCloudEventIDsMultiStatus:
 		return nil, value, nil
 	}
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue

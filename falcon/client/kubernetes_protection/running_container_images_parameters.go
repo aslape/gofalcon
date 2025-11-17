@@ -64,25 +64,40 @@ type RunningContainerImagesParams struct {
 
 	/* Filter.
 
-	   Retrieve list of images on running containers using a query in Falcon Query Language (FQL). Supported filters:  cid,cluster_id,cluster_name,hosts,image_digest,image_has_been_assessed,image_id,image_name,image_registry,image_repository,image_tag,last_seen,running_status
+	     Retrieve list of images on running containers using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `cid`
+	- `cluster_id`
+	- `cluster_name`
+	- `hosts`
+	- `image_digest`
+	- `image_has_been_assessed`
+	- `image_id`
+	- `image_name`
+	- `image_registry`
+	- `image_repository`
+	- `image_tag`
+	- `last_seen`
+	- `running_status`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 200.
+
+	   Default: 200
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   Field to sort results by
+	   The fields to sort the records on.
 	*/
 	Sort *string
 
@@ -103,7 +118,18 @@ func (o *RunningContainerImagesParams) WithDefaults() *RunningContainerImagesPar
 //
 // All values with no default are reset to their zero value.
 func (o *RunningContainerImagesParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(200)
+	)
+
+	val := RunningContainerImagesParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the running container images params

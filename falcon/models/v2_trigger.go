@@ -34,6 +34,15 @@ type V2Trigger struct {
 
 	// schedule
 	Schedule *GraphTimerEventDefinition `json:"schedule,omitempty"`
+
+	// type
+	Type string `json:"type,omitempty"`
+
+	// version constraint
+	VersionConstraint string `json:"version_constraint,omitempty"`
+
+	// webhook config
+	WebhookConfig *WebhooktriggerAPIRequest `json:"webhook_config,omitempty"`
 }
 
 // Validate validates this v2 trigger
@@ -49,6 +58,10 @@ func (m *V2Trigger) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSchedule(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateWebhookConfig(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -105,6 +118,25 @@ func (m *V2Trigger) validateSchedule(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *V2Trigger) validateWebhookConfig(formats strfmt.Registry) error {
+	if swag.IsZero(m.WebhookConfig) { // not required
+		return nil
+	}
+
+	if m.WebhookConfig != nil {
+		if err := m.WebhookConfig.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("webhook_config")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("webhook_config")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this v2 trigger based on the context it is used
 func (m *V2Trigger) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -114,6 +146,10 @@ func (m *V2Trigger) ContextValidate(ctx context.Context, formats strfmt.Registry
 	}
 
 	if err := m.contextValidateSchedule(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateWebhookConfig(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -157,6 +193,27 @@ func (m *V2Trigger) contextValidateSchedule(ctx context.Context, formats strfmt.
 				return ve.ValidateName("schedule")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("schedule")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *V2Trigger) contextValidateWebhookConfig(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.WebhookConfig != nil {
+
+		if swag.IsZero(m.WebhookConfig) { // not required
+			return nil
+		}
+
+		if err := m.WebhookConfig.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("webhook_config")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("webhook_config")
 			}
 			return err
 		}

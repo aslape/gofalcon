@@ -94,6 +94,9 @@ type DeviceDevice struct {
 	// external ip
 	ExternalIP string `json:"external_ip,omitempty"`
 
+	// filesystem containment status
+	FilesystemContainmentStatus string `json:"filesystem_containment_status,omitempty"`
+
 	// first login timestamp
 	FirstLoginTimestamp string `json:"first_login_timestamp,omitempty"`
 
@@ -156,6 +159,9 @@ type DeviceDevice struct {
 
 	// last seen
 	LastSeen string `json:"last_seen,omitempty"`
+
+	// license activation state
+	LicenseActivationState string `json:"license_activation_state,omitempty"`
 
 	// linux sensor mode
 	LinuxSensorMode string `json:"linux_sensor_mode,omitempty"`

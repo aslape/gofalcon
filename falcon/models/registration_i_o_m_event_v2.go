@@ -38,6 +38,9 @@ type RegistrationIOMEventV2 struct {
 	// Required: true
 	Cid *string `json:"cid"`
 
+	// cloud groups v2
+	CloudGroupsV2 []*DomainCloudGroup `json:"cloud_groups_v2"`
+
 	// cloud labels
 	CloudLabels []*ClassificationLabel `json:"cloud_labels"`
 
@@ -58,6 +61,9 @@ type RegistrationIOMEventV2 struct {
 	// findings
 	// Required: true
 	Findings []RegistrationIOMEventV2Findings `json:"findings"`
+
+	// groups
+	Groups []string `json:"groups"`
 
 	// id
 	// Required: true
@@ -151,6 +157,10 @@ func (m *RegistrationIOMEventV2) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCid(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCloudGroupsV2(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -262,6 +272,32 @@ func (m *RegistrationIOMEventV2) validateCid(formats strfmt.Registry) error {
 
 	if err := validate.Required("cid", "body", m.Cid); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *RegistrationIOMEventV2) validateCloudGroupsV2(formats strfmt.Registry) error {
+	if swag.IsZero(m.CloudGroupsV2) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.CloudGroupsV2); i++ {
+		if swag.IsZero(m.CloudGroupsV2[i]) { // not required
+			continue
+		}
+
+		if m.CloudGroupsV2[i] != nil {
+			if err := m.CloudGroupsV2[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cloud_groups_v2" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cloud_groups_v2" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -497,6 +533,10 @@ func (m *RegistrationIOMEventV2) validateTags(formats strfmt.Registry) error {
 func (m *RegistrationIOMEventV2) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateCloudGroupsV2(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCloudLabels(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -508,6 +548,31 @@ func (m *RegistrationIOMEventV2) ContextValidate(ctx context.Context, formats st
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *RegistrationIOMEventV2) contextValidateCloudGroupsV2(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.CloudGroupsV2); i++ {
+
+		if m.CloudGroupsV2[i] != nil {
+
+			if swag.IsZero(m.CloudGroupsV2[i]) { // not required
+				return nil
+			}
+
+			if err := m.CloudGroupsV2[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cloud_groups_v2" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cloud_groups_v2" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

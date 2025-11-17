@@ -86,13 +86,16 @@ type DeviceapiDeviceSwagger struct {
 	DeviceID *string `json:"device_id"`
 
 	// device policies
-	DevicePolicies *DeviceMappedDevicePolicies `json:"device_policies,omitempty"`
+	DevicePolicies *DeviceapiMappedDevicePoliciesSwagger `json:"device_policies,omitempty"`
 
 	// email
 	Email string `json:"email,omitempty"`
 
 	// external ip
 	ExternalIP string `json:"external_ip,omitempty"`
+
+	// filesystem containment status
+	FilesystemContainmentStatus string `json:"filesystem_containment_status,omitempty"`
 
 	// first login timestamp
 	FirstLoginTimestamp string `json:"first_login_timestamp,omitempty"`

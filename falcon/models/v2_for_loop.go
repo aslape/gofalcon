@@ -19,6 +19,15 @@ import (
 // swagger:model v2.ForLoop
 type V2ForLoop struct {
 
+	// cel condition
+	CelCondition string `json:"cel_condition,omitempty"`
+
+	// condition
+	Condition string `json:"condition,omitempty"`
+
+	// condition display
+	ConditionDisplay []string `json:"condition_display"`
+
 	// continue on partial execution
 	// Required: true
 	ContinueOnPartialExecution *bool `json:"continue_on_partial_execution"`
@@ -26,6 +35,12 @@ type V2ForLoop struct {
 	// input
 	// Required: true
 	Input *string `json:"input"`
+
+	// max execution seconds
+	MaxExecutionSeconds int32 `json:"max_execution_seconds,omitempty"`
+
+	// max iteration count
+	MaxIterationCount int32 `json:"max_iteration_count,omitempty"`
 
 	// sequential
 	Sequential bool `json:"sequential,omitempty"`

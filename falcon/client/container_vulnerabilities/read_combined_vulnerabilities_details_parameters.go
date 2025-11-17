@@ -64,7 +64,17 @@ type ReadCombinedVulnerabilitiesDetailsParams struct {
 
 	/* Filter.
 
-	   Filter the vulnerabilities using a query in Falcon Query Language (FQL). Supported vulnerability filters: cid,cps_rating,cve_id,cvss_score,exploited_status,exploited_status_name,is_zero_day,remediation_available,severity
+	     Filter the vulnerabilities using a query in Falcon Query Language (FQL). Supported vulnerability filter fields:
+	- `cid`
+	- `cps_rating`
+	- `cve_id`
+	- `cvss_score`
+	- `exploited_status_name`
+	- `exploited_status`
+	- `include_base_image_vuln`
+	- `is_zero_day`
+	- `remediation_available`
+	- `severity`
 	*/
 	Filter *string
 
@@ -76,13 +86,15 @@ type ReadCombinedVulnerabilitiesDetailsParams struct {
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 5000.
+
+	   Default: 5000
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
@@ -103,7 +115,18 @@ func (o *ReadCombinedVulnerabilitiesDetailsParams) WithDefaults() *ReadCombinedV
 //
 // All values with no default are reset to their zero value.
 func (o *ReadCombinedVulnerabilitiesDetailsParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(5000)
+	)
+
+	val := ReadCombinedVulnerabilitiesDetailsParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the read combined vulnerabilities details params

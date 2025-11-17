@@ -64,25 +64,40 @@ type ReadCombinedDetectionsParams struct {
 
 	/* Filter.
 
-	   Filter images using a query in Falcon Query Language (FQL). Supported filters:  cid,container_id,detection_type,id,image_digest,image_id,image_registry,image_repository,image_tag,name,severity
+	     Filter images detections using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `cid`
+	- `detection_type`
+	- `image_digest`
+	- `image_registry`
+	- `image_repository`
+	- `image_tag`
+	- `severity`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   The fields to sort the records on. Supported columns:  [containers_impacted detection_name detection_severity detection_type images_impacted last_detected]
+	     The fields to sort the records on. Supported columns:
+	- `containers_impacted`
+	- `detection_name`
+	- `detection_severity`
+	- `detection_type`
+	- `images_impacted`
+	- `last_detected`
 	*/
 	Sort *string
 
@@ -103,7 +118,18 @@ func (o *ReadCombinedDetectionsParams) WithDefaults() *ReadCombinedDetectionsPar
 //
 // All values with no default are reset to their zero value.
 func (o *ReadCombinedDetectionsParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(100)
+	)
+
+	val := ReadCombinedDetectionsParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the read combined detections params

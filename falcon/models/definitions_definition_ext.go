@@ -32,6 +32,10 @@ type DefinitionsDefinitionExt struct {
 	// Required: true
 	Enabled *bool `json:"enabled"`
 
+	// Indicates whether the workflow has validation errors
+	// Required: true
+	HasValidationErrors *bool `json:"has_validation_errors"`
+
 	// Unique identifier for the trigger.
 	// Required: true
 	ID *string `json:"id"`
@@ -58,6 +62,9 @@ type DefinitionsDefinitionExt struct {
 	// Required: true
 	NodeRegistry map[string]string `json:"nodeRegistry"`
 
+	// output fields
+	OutputFields []string `json:"output_fields"`
+
 	// parameters
 	Parameters *V2Parameters `json:"parameters,omitempty"`
 
@@ -67,6 +74,9 @@ type DefinitionsDefinitionExt struct {
 
 	// provision on install
 	ProvisionOnInstall bool `json:"provision_on_install,omitempty"`
+
+	// summary
+	Summary string `json:"summary,omitempty"`
 
 	// trigger
 	// Required: true
@@ -78,6 +88,12 @@ type DefinitionsDefinitionExt struct {
 	// uniq node seen
 	// Required: true
 	UniqNodeSeen map[string]bool `json:"uniqNodeSeen"`
+
+	// use cases
+	UseCases []string `json:"use_cases"`
+
+	// vendors
+	Vendors []string `json:"vendors"`
 
 	// Version of the workflow. A given definition ID can have many versions. Each time an update is applied a new version is generated.
 	// Required: true
@@ -97,6 +113,10 @@ func (m *DefinitionsDefinitionExt) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateEnabled(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHasValidationErrors(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -201,6 +221,15 @@ func (m *DefinitionsDefinitionExt) validateConditions(formats strfmt.Registry) e
 func (m *DefinitionsDefinitionExt) validateEnabled(formats strfmt.Registry) error {
 
 	if err := validate.Required("enabled", "body", m.Enabled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DefinitionsDefinitionExt) validateHasValidationErrors(formats strfmt.Registry) error {
+
+	if err := validate.Required("has_validation_errors", "body", m.HasValidationErrors); err != nil {
 		return err
 	}
 

@@ -19,6 +19,12 @@ import (
 // swagger:model domain.ExportJobMetadataV1
 type DomainExportJobMetadataV1 struct {
 
+	// completion percentage
+	CompletionPercentage int32 `json:"completion_percentage,omitempty"`
+
+	// created date
+	CreatedDate string `json:"created_date,omitempty"`
+
 	// entity
 	// Required: true
 	Entity *string `json:"entity"`

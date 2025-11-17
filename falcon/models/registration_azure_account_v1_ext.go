@@ -57,7 +57,7 @@ type RegistrationAzureAccountV1Ext struct {
 	CloudScopes []*DomainCloudScope `json:"cloud_scopes"`
 
 	// conditions
-	Conditions []*DomainCondition `json:"conditions"`
+	Conditions []*StatemgmtCondition `json:"conditions"`
 
 	// credentials end date
 	// Format: date-time
@@ -71,6 +71,14 @@ type RegistrationAzureAccountV1Ext struct {
 
 	// environment
 	Environment string `json:"environment,omitempty"`
+
+	// ioa status
+	// Required: true
+	IoaStatus *string `json:"ioa_status"`
+
+	// iom status
+	// Required: true
+	IomStatus *string `json:"iom_status"`
 
 	// Is CSPM Lite enabled.
 	IsCspmLite bool `json:"is_cspm_lite,omitempty"`
@@ -91,7 +99,7 @@ type RegistrationAzureAccountV1Ext struct {
 	PublicCertificateRaw string `json:"public_certificate_raw,omitempty"`
 
 	// role assignments
-	RoleAssignments []*DomainAzureRoleAssignment `json:"role_assignments"`
+	RoleAssignments []*AzureDBRoleAssignment `json:"role_assignments"`
 
 	// Whether to show modal on the UI instructing existing D4C Azure customer to reregister subscriptions for CSPM.
 	// Required: true
@@ -150,6 +158,14 @@ func (m *RegistrationAzureAccountV1Ext) Validate(formats strfmt.Registry) error 
 	}
 
 	if err := m.validateCredentialsEndDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIoaStatus(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIomStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -309,6 +325,24 @@ func (m *RegistrationAzureAccountV1Ext) validateCredentialsEndDate(formats strfm
 	}
 
 	if err := validate.FormatOf("credentials_end_date", "body", "date-time", m.CredentialsEndDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RegistrationAzureAccountV1Ext) validateIoaStatus(formats strfmt.Registry) error {
+
+	if err := validate.Required("ioa_status", "body", m.IoaStatus); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RegistrationAzureAccountV1Ext) validateIomStatus(formats strfmt.Registry) error {
+
+	if err := validate.Required("iom_status", "body", m.IomStatus); err != nil {
 		return err
 	}
 

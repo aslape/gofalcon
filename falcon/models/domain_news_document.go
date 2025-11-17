@@ -30,7 +30,7 @@ type DomainNewsDocument struct {
 	// News attachment, containing either pdf url or feeds zip and/or gzip archive
 	Attachments []*DomainFile `json:"attachments"`
 
-	// Date of the news document creation, unix timestampt
+	// Date of the news document creation, Unix timestamp
 	// Required: true
 	CreatedDate *int64 `json:"created_date"`
 
@@ -47,7 +47,7 @@ type DomainNewsDocument struct {
 	// News document image
 	Image *DomainImage `json:"image,omitempty"`
 
-	// Date of the news document last modification, unix timestampt
+	// Date of the news document last modification, Unix timestamp
 	// Required: true
 	LastModifiedDate *int64 `json:"last_modified_date"`
 
@@ -65,8 +65,14 @@ type DomainNewsDocument struct {
 	// internal field, not used
 	NotifyUsers bool `json:"notify_users,omitempty"`
 
+	// Time it takes an average user to read the news content
+	ReadTimeInMinutes int32 `json:"read_time_in_minutes,omitempty"`
+
 	// Rich text description with markup
 	RichTextDescription string `json:"rich_text_description,omitempty"`
+
+	// Rich text short description with markup
+	RichTextShortDescription string `json:"rich_text_short_description,omitempty"`
 
 	// Short description of the report content
 	ShortDescription string `json:"short_description,omitempty"`
@@ -77,6 +83,9 @@ type DomainNewsDocument struct {
 
 	// News document sub-type. For Feeds type it can be: Snort/Suricata, Yara, NetWitness, Common Event Format. For Periodic Report type it can be: Daily, Weekly, Monthly, Quarterly, Annual. For non feeds or periodic reports type it is empty.
 	SubType *DomainEntity `json:"sub_type,omitempty"`
+
+	// Summary of the report content
+	Summary string `json:"summary,omitempty"`
 
 	// News tags, which contains MITRE, Vulnerability community identifiers, capabilities, malware family name, customer target, activity cluster, notable event, geopolitical issue
 	// Required: true

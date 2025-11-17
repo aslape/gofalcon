@@ -64,31 +64,48 @@ type ReadPackagesCombinedExportParams struct {
 
 	/* Filter.
 
-	   Filter packages using a query in Falcon Query Language (FQL). Supported filters:  cid,container_id,cveid,fix_status,image_digest,license,package_name_version,severity,type,vulnerability_count
+	     Filter packages using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `ai_related`
+	- `cid`
+	- `container_id`
+	- `cveid`
+	- `fix_status`
+	- `image_digest`
+	- `license`
+	- `package_name_version`
+	- `severity`
+	- `type`
+	- `vulnerability_count`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* OnlyZeroDayAffected.
 
-	   (true/false) load zero day affected packages, default is false
+	   (true/false) load zero day affected packages
 	*/
 	OnlyZeroDayAffected *bool
 
 	/* Sort.
 
-	   The fields to sort the records on. Supported columns:  [license package_name_version type]
+	     The fields to sort the records on. Supported columns:
+	- `license`
+	- `package_name_version`
+	- `type`
+	- `vulnerability_count`
 	*/
 	Sort *string
 
@@ -109,7 +126,21 @@ func (o *ReadPackagesCombinedExportParams) WithDefaults() *ReadPackagesCombinedE
 //
 // All values with no default are reset to their zero value.
 func (o *ReadPackagesCombinedExportParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(100)
+
+		onlyZeroDayAffectedDefault = bool(false)
+	)
+
+	val := ReadPackagesCombinedExportParams{
+		Limit:               &limitDefault,
+		OnlyZeroDayAffected: &onlyZeroDayAffectedDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the read packages combined export params

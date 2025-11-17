@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -27,6 +28,10 @@ type DomainXDRParams struct {
 	// Required: true
 	AssignToUUID *string `json:"assign_to_uuid"`
 
+	// author
+	// Required: true
+	Author *string `json:"author"`
+
 	// comment
 	// Required: true
 	Comment *string `json:"comment"`
@@ -34,6 +39,24 @@ type DomainXDRParams struct {
 	// execution offset
 	// Required: true
 	ExecutionOffset *string `json:"execution_offset"`
+
+	// guardrail notifications
+	GuardrailNotifications []*DomainNotifications `json:"guardrail_notifications"`
+
+	// mitre attack
+	MitreAttack []*DomainMitreAttackMapping `json:"mitre_attack"`
+
+	// origin
+	// Required: true
+	Origin *string `json:"origin"`
+
+	// rule id
+	// Required: true
+	RuleID *string `json:"rule_id"`
+
+	// rule version id
+	// Required: true
+	RuleVersionID *string `json:"rule_version_id"`
 
 	// severity
 	// Required: true
@@ -55,6 +78,14 @@ type DomainXDRParams struct {
 	// Required: true
 	Technique *string `json:"technique"`
 
+	// template id
+	// Required: true
+	TemplateID *string `json:"template_id"`
+
+	// trigger mode
+	// Required: true
+	TriggerMode *string `json:"trigger_mode"`
+
 	// type
 	// Required: true
 	Type *string `json:"type"`
@@ -72,11 +103,35 @@ func (m *DomainXDRParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAuthor(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateComment(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateExecutionOffset(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGuardrailNotifications(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMitreAttack(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOrigin(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRuleID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRuleVersionID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -97,6 +152,14 @@ func (m *DomainXDRParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTechnique(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTemplateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTriggerMode(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -128,6 +191,15 @@ func (m *DomainXDRParams) validateAssignToUUID(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *DomainXDRParams) validateAuthor(formats strfmt.Registry) error {
+
+	if err := validate.Required("author", "body", m.Author); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *DomainXDRParams) validateComment(formats strfmt.Registry) error {
 
 	if err := validate.Required("comment", "body", m.Comment); err != nil {
@@ -140,6 +212,85 @@ func (m *DomainXDRParams) validateComment(formats strfmt.Registry) error {
 func (m *DomainXDRParams) validateExecutionOffset(formats strfmt.Registry) error {
 
 	if err := validate.Required("execution_offset", "body", m.ExecutionOffset); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DomainXDRParams) validateGuardrailNotifications(formats strfmt.Registry) error {
+	if swag.IsZero(m.GuardrailNotifications) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.GuardrailNotifications); i++ {
+		if swag.IsZero(m.GuardrailNotifications[i]) { // not required
+			continue
+		}
+
+		if m.GuardrailNotifications[i] != nil {
+			if err := m.GuardrailNotifications[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("guardrail_notifications" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("guardrail_notifications" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *DomainXDRParams) validateMitreAttack(formats strfmt.Registry) error {
+	if swag.IsZero(m.MitreAttack) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.MitreAttack); i++ {
+		if swag.IsZero(m.MitreAttack[i]) { // not required
+			continue
+		}
+
+		if m.MitreAttack[i] != nil {
+			if err := m.MitreAttack[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("mitre_attack" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("mitre_attack" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *DomainXDRParams) validateOrigin(formats strfmt.Registry) error {
+
+	if err := validate.Required("origin", "body", m.Origin); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DomainXDRParams) validateRuleID(formats strfmt.Registry) error {
+
+	if err := validate.Required("rule_id", "body", m.RuleID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DomainXDRParams) validateRuleVersionID(formats strfmt.Registry) error {
+
+	if err := validate.Required("rule_version_id", "body", m.RuleVersionID); err != nil {
 		return err
 	}
 
@@ -191,6 +342,24 @@ func (m *DomainXDRParams) validateTechnique(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *DomainXDRParams) validateTemplateID(formats strfmt.Registry) error {
+
+	if err := validate.Required("template_id", "body", m.TemplateID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DomainXDRParams) validateTriggerMode(formats strfmt.Registry) error {
+
+	if err := validate.Required("trigger_mode", "body", m.TriggerMode); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *DomainXDRParams) validateType(formats strfmt.Registry) error {
 
 	if err := validate.Required("type", "body", m.Type); err != nil {
@@ -200,8 +369,71 @@ func (m *DomainXDRParams) validateType(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this domain x d r params based on context it is used
+// ContextValidate validate this domain x d r params based on the context it is used
 func (m *DomainXDRParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateGuardrailNotifications(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMitreAttack(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *DomainXDRParams) contextValidateGuardrailNotifications(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.GuardrailNotifications); i++ {
+
+		if m.GuardrailNotifications[i] != nil {
+
+			if swag.IsZero(m.GuardrailNotifications[i]) { // not required
+				return nil
+			}
+
+			if err := m.GuardrailNotifications[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("guardrail_notifications" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("guardrail_notifications" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *DomainXDRParams) contextValidateMitreAttack(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.MitreAttack); i++ {
+
+		if m.MitreAttack[i] != nil {
+
+			if swag.IsZero(m.MitreAttack[i]) { // not required
+				return nil
+			}
+
+			if err := m.MitreAttack[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("mitre_attack" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("mitre_attack" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

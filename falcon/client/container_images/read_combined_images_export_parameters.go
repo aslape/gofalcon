@@ -64,37 +64,83 @@ type ReadCombinedImagesExportParams struct {
 
 	/* ExpandDetections.
 
-	   expand detections
+	   Expand detections details
 	*/
 	ExpandDetections *bool
 
 	/* ExpandVulnerabilities.
 
-	   expand vulnerabilities
+	   Expand vulnerabilities details
 	*/
 	ExpandVulnerabilities *bool
 
 	/* Filter.
 
-	   Filter images using a query in Falcon Query Language (FQL). Supported filters:  arch,base_os,cid,container_id,container_running_status,cps_rating,crowdstrike_user,cve_id,detection_count,detection_name,detection_severity,first_seen,image_digest,image_id,layer_digest,package_name_version,registry,repository,tag,vulnerability_count,vulnerability_severity
+	     Filter images using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `ai_related`
+	- `ai_vulnerability_count`
+	- `arch`
+	- `base_os`
+	- `cid`
+	- `container_id`
+	- `container_running_status`
+	- `cps_rating`
+	- `crowdstrike_user`
+	- `cve_id`
+	- `detection_count`
+	- `detection_name`
+	- `detection_severity`
+	- `first_seen`
+	- `image_digest`
+	- `image_id`
+	- `include_base_image_vuln`
+	- `layer_digest`
+	- `package_name_version`
+	- `registry`
+	- `repository`
+	- `source`
+	- `tag`
+	- `vulnerability_count`
+	- `vulnerability_severity`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   The fields to sort the records on. Supported columns:  [base_os cid detections firstScanned first_seen highest_cps_current_rating highest_detection_severity highest_vulnerability_severity image_digest image_id last_seen layers_with_vulnerabilities packages registry repository tag vulnerabilities]
+	     The fields to sort the records on. Supported columns:
+	- `ai_vulnerabilities`
+	- `base_os`
+	- `cid`
+	- `detections`
+	- `firstScanned`
+	- `first_seen`
+	- `highest_cps_current_rating`
+	- `highest_detection_severity`
+	- `highest_vulnerability_severity`
+	- `image_digest`
+	- `image_id`
+	- `last_seen`
+	- `layers_with_vulnerabilities`
+	- `packages`
+	- `registry`
+	- `repository`
+	- `source`
+	- `tag`
+	- `vulnerabilities`
 	*/
 	Sort *string
 
@@ -115,7 +161,24 @@ func (o *ReadCombinedImagesExportParams) WithDefaults() *ReadCombinedImagesExpor
 //
 // All values with no default are reset to their zero value.
 func (o *ReadCombinedImagesExportParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		expandDetectionsDefault = bool(false)
+
+		expandVulnerabilitiesDefault = bool(false)
+
+		limitDefault = int64(100)
+	)
+
+	val := ReadCombinedImagesExportParams{
+		ExpandDetections:      &expandDetectionsDefault,
+		ExpandVulnerabilities: &expandVulnerabilitiesDefault,
+		Limit:                 &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the read combined images export params

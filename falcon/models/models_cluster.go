@@ -48,6 +48,10 @@ type ModelsCluster struct {
 	// Required: true
 	CloudRegion *string `json:"cloud_region"`
 
+	// cloud service
+	// Required: true
+	CloudService *string `json:"cloud_service"`
+
 	// cluster id
 	// Required: true
 	ClusterID *string `json:"cluster_id"`
@@ -75,6 +79,14 @@ type ModelsCluster struct {
 	// iar coverage
 	// Required: true
 	IarCoverage *bool `json:"iar_coverage"`
+
+	// kac agent active
+	// Required: true
+	KacAgentActive *bool `json:"kac_agent_active"`
+
+	// kac agent id
+	// Required: true
+	KacAgentID *string `json:"kac_agent_id"`
 
 	// kubernetes version
 	// Required: true
@@ -145,6 +157,10 @@ func (m *ModelsCluster) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCloudService(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateClusterID(formats); err != nil {
 		res = append(res, err)
 	}
@@ -170,6 +186,14 @@ func (m *ModelsCluster) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateIarCoverage(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateKacAgentActive(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateKacAgentID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -293,6 +317,15 @@ func (m *ModelsCluster) validateCloudRegion(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ModelsCluster) validateCloudService(formats strfmt.Registry) error {
+
+	if err := validate.Required("cloud_service", "body", m.CloudService); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *ModelsCluster) validateClusterID(formats strfmt.Registry) error {
 
 	if err := validate.Required("cluster_id", "body", m.ClusterID); err != nil {
@@ -350,6 +383,24 @@ func (m *ModelsCluster) validateFirstSeen(formats strfmt.Registry) error {
 func (m *ModelsCluster) validateIarCoverage(formats strfmt.Registry) error {
 
 	if err := validate.Required("iar_coverage", "body", m.IarCoverage); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ModelsCluster) validateKacAgentActive(formats strfmt.Registry) error {
+
+	if err := validate.Required("kac_agent_active", "body", m.KacAgentActive); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ModelsCluster) validateKacAgentID(formats strfmt.Registry) error {
+
+	if err := validate.Required("kac_agent_id", "body", m.KacAgentID); err != nil {
 		return err
 	}
 

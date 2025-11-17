@@ -64,25 +64,75 @@ type ContainerCombinedParams struct {
 
 	/* Filter.
 
-	   Search Kubernetes containers using a query in Falcon Query Language (FQL). Supported filters:  agent_id,agent_type,allow_privilege_escalation,cid,cloud_account_id,cloud_name,cloud_region,cluster_id,cluster_name,container_id,container_name,cve_id,detection_name,first_seen,image_detection_count,image_digest,image_has_been_assessed,image_id,image_registry,image_repository,image_tag,image_vulnerability_count,insecure_mount_source,insecure_mount_type,insecure_propagation_mode,interactive_mode,ipv4,ipv6,labels,last_seen,namespace,node_name,node_uid,package_name_version,pod_id,pod_name,port,privileged,root_write_access,run_as_root_group,run_as_root_user,running_status
+	     Search Kubernetes containers using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `agent_id`
+	- `agent_type`
+	- `ai_related`
+	- `allow_privilege_escalation`
+	- `app_name`
+	- `cid`
+	- `cloud_account_id`
+	- `cloud_instance_id`
+	- `cloud_name`
+	- `cloud_region`
+	- `cloud_service`
+	- `cluster_id`
+	- `cluster_name`
+	- `container_id`
+	- `container_image_id`
+	- `container_name`
+	- `cve_id`
+	- `detection_name`
+	- `first_seen`
+	- `image_detection_count`
+	- `image_digest`
+	- `image_has_been_assessed`
+	- `image_id`
+	- `image_registry`
+	- `image_repository`
+	- `image_tag`
+	- `image_vulnerability_count`
+	- `insecure_mount_source`
+	- `insecure_mount_type`
+	- `insecure_propagation_mode`
+	- `interactive_mode`
+	- `ipv4`
+	- `ipv6`
+	- `kac_agent_id`
+	- `labels`
+	- `last_seen`
+	- `namespace`
+	- `node_name`
+	- `node_uid`
+	- `package_name_version`
+	- `pod_id`
+	- `pod_name`
+	- `port`
+	- `privileged`
+	- `root_write_access`
+	- `run_as_root_group`
+	- `run_as_root_user`
+	- `running_status`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 200.
+
+	   Default: 200
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   Field to sort results by
+	   The fields to sort the records on.
 	*/
 	Sort *string
 
@@ -103,7 +153,18 @@ func (o *ContainerCombinedParams) WithDefaults() *ContainerCombinedParams {
 //
 // All values with no default are reset to their zero value.
 func (o *ContainerCombinedParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(200)
+	)
+
+	val := ContainerCombinedParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the container combined params

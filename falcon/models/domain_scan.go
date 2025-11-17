@@ -32,6 +32,12 @@ type DomainScan struct {
 	// cloud ml level prevention
 	CloudMlLevelPrevention int32 `json:"cloud_ml_level_prevention,omitempty"`
 
+	// cloud pup adware level detection
+	CloudPupAdwareLevelDetection int32 `json:"cloud_pup_adware_level_detection,omitempty"`
+
+	// cloud pup adware level prevention
+	CloudPupAdwareLevelPrevention int32 `json:"cloud_pup_adware_level_prevention,omitempty"`
+
 	// completed host count
 	CompletedHostCount int32 `json:"completed_host_count,omitempty"`
 
@@ -63,6 +69,9 @@ type DomainScan struct {
 	// hosts
 	Hosts []string `json:"hosts"`
 
+	// hosts created
+	HostsCreated bool `json:"hosts_created,omitempty"`
+
 	// id
 	// Required: true
 	ID *string `json:"id"`
@@ -79,9 +88,6 @@ type DomainScan struct {
 
 	// max duration
 	MaxDuration int32 `json:"max_duration,omitempty"`
-
-	// max file size
-	MaxFileSize int32 `json:"max_file_size,omitempty"`
 
 	// metadata
 	Metadata []*DomainScanMetadata `json:"metadata"`
@@ -106,6 +112,9 @@ type DomainScan struct {
 
 	// quarantine
 	Quarantine bool `json:"quarantine,omitempty"`
+
+	// rollup version
+	RollupVersion int32 `json:"rollup_version,omitempty"`
 
 	// scan completed on
 	// Format: date-time

@@ -64,25 +64,56 @@ type ReadCombinedVulnerabilitiesParams struct {
 
 	/* Filter.
 
-	   Filter vulnerabilities using a query in Falcon Query Language (FQL). Supported filters: base_os,cid,container_id,container_running_status,containers_impacted_range,cps_rating,cve_id,cvss_score,description,exploited_status,exploited_status_name,fix_status,image_digest,image_id,images_impacted_range,package_name_version,registry,repository,severity,tag
+	     Filter vulnerabilities using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `ai_related`
+	- `base_os`
+	- `cid`
+	- `container_id`
+	- `container_running_status`
+	- `containers_impacted_range`
+	- `cps_rating`
+	- `cve_id`
+	- `cvss_score`
+	- `description`
+	- `exploited_status_name`
+	- `exploited_status`
+	- `fix_status`
+	- `image_digest`
+	- `image_id`
+	- `images_impacted_range`
+	- `include_base_image_vuln`
+	- `package_name_version`
+	- `registry`
+	- `repository`
+	- `severity`
+	- `tag`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   The fields to sort the records on. Supported columns:  [cps_current_rating cve_id cvss_score description images_impacted packages_impacted severity]
+	     The fields to sort the records on. Supported columns:
+	- `cps_current_rating`
+	- `cve_id`
+	- `cvss_score`
+	- `description`
+	- `images_impacted`
+	- `packages_impacted`
+	- `severity`
 	*/
 	Sort *string
 
@@ -103,7 +134,18 @@ func (o *ReadCombinedVulnerabilitiesParams) WithDefaults() *ReadCombinedVulnerab
 //
 // All values with no default are reset to their zero value.
 func (o *ReadCombinedVulnerabilitiesParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(100)
+	)
+
+	val := ReadCombinedVulnerabilitiesParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the read combined vulnerabilities params

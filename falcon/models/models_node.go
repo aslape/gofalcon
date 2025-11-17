@@ -60,6 +60,10 @@ type ModelsNode struct {
 	// Required: true
 	CloudRegion *string `json:"cloud_region"`
 
+	// cloud service
+	// Required: true
+	CloudService *string `json:"cloud_service"`
+
 	// cluster id
 	// Required: true
 	ClusterID *string `json:"cluster_id"`
@@ -102,6 +106,10 @@ type ModelsNode struct {
 	// ipv6
 	// Required: true
 	IPV6 *string `json:"ipv6"`
+
+	// kac agent id
+	// Required: true
+	KacAgentID *string `json:"kac_agent_id"`
 
 	// kernel version
 	// Required: true
@@ -154,6 +162,10 @@ type ModelsNode struct {
 	// provider id
 	// Required: true
 	ProviderID *string `json:"provider_id"`
+
+	// resource status
+	// Required: true
+	ResourceStatus *string `json:"resource_status"`
 
 	// storage
 	// Required: true
@@ -208,6 +220,10 @@ func (m *ModelsNode) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCloudService(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateClusterID(formats); err != nil {
 		res = append(res, err)
 	}
@@ -245,6 +261,10 @@ func (m *ModelsNode) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateIPV6(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateKacAgentID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -297,6 +317,10 @@ func (m *ModelsNode) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateProviderID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResourceStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -419,6 +443,15 @@ func (m *ModelsNode) validateCloudRegion(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ModelsNode) validateCloudService(formats strfmt.Registry) error {
+
+	if err := validate.Required("cloud_service", "body", m.CloudService); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *ModelsNode) validateClusterID(formats strfmt.Registry) error {
 
 	if err := validate.Required("cluster_id", "body", m.ClusterID); err != nil {
@@ -503,6 +536,15 @@ func (m *ModelsNode) validateIPV4(formats strfmt.Registry) error {
 func (m *ModelsNode) validateIPV6(formats strfmt.Registry) error {
 
 	if err := validate.Required("ipv6", "body", m.IPV6); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ModelsNode) validateKacAgentID(formats strfmt.Registry) error {
+
+	if err := validate.Required("kac_agent_id", "body", m.KacAgentID); err != nil {
 		return err
 	}
 
@@ -620,6 +662,15 @@ func (m *ModelsNode) validatePodCount(formats strfmt.Registry) error {
 func (m *ModelsNode) validateProviderID(formats strfmt.Registry) error {
 
 	if err := validate.Required("provider_id", "body", m.ProviderID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ModelsNode) validateResourceStatus(formats strfmt.Registry) error {
+
+	if err := validate.Required("resource_status", "body", m.ResourceStatus); err != nil {
 		return err
 	}
 

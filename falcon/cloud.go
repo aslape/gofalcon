@@ -19,6 +19,9 @@ const (
 	CloudUs2
 	CloudEu1
 	CloudUsGov1
+	CloudGov1
+	CloudUsGov2
+	CloudGov2
 )
 
 // Cloud parses cloud string (example: us-1, us-2, eu-1, us-gov-1, etc). If a string is not recognized CloudUs1 is returned.
@@ -30,20 +33,28 @@ func Cloud(cloudString string) CloudType {
 // CloudValidate parses cloud string (example: us-1, us-2, eu-1, us-gov-1, etc.). Error is returned when string cannot be recognized.
 func CloudValidate(cloudString string) (CloudType, error) {
 	trimmed := strings.TrimSpace(cloudString)
-	lower := strings.ToLower(trimmed)
+	stripped := strings.ReplaceAll(trimmed, "-", "")
+	lower := strings.ToLower(stripped)
+
 	switch lower {
 	case "":
 		fallthrough
 	case "autodiscover":
 		return CloudAutoDiscover, nil
-	case "us-1":
+	case "us1":
 		return CloudUs1, nil
-	case "us-2":
+	case "us2":
 		return CloudUs2, nil
-	case "eu-1":
+	case "eu1":
 		return CloudEu1, nil
-	case "us-gov-1":
+	case "usgov1":
 		return CloudUsGov1, nil
+	case "gov1":
+		return CloudGov1, nil
+	case "usgov2":
+		return CloudUsGov2, nil
+	case "gov2":
+		return CloudGov2, nil
 	}
 	return CloudUs1, fmt.Errorf("unrecognized CrowdStrike Falcon Cloud: %s", lower)
 }
@@ -61,6 +72,12 @@ func (c CloudType) Host() string {
 		return "api.eu-1.crowdstrike.com"
 	case CloudUsGov1:
 		return "api.laggar.gcw.crowdstrike.com"
+	case CloudGov1:
+		return "api.laggar.gcw.crowdstrike.com"
+	case CloudUsGov2:
+		return "api.us-gov-2.crowdstrike.mil"
+	case CloudGov2:
+		return "api.us-gov-2.crowdstrike.mil"
 	}
 }
 
@@ -76,6 +93,12 @@ func (c CloudType) String() string {
 		return "eu-1"
 	case CloudUsGov1:
 		return "us-gov-1"
+	case CloudGov1:
+		return "gov1"
+	case CloudUsGov2:
+		return "us-gov-2"
+	case CloudGov2:
+		return "gov2"
 	default:
 		return "UNKNOWN FALCON CLOUD REGION"
 	}
@@ -97,16 +120,20 @@ func (c *CloudType) Autodiscover(ctx context.Context, clientId, clientSecret str
 		switch e := err.(type) {
 		case *oauth2.Oauth2AccessTokenForbidden:
 			if e.Payload != nil && len(e.Payload.Errors) == 1 && e.Payload.Errors[0] != nil && e.Payload.Errors[0].Message != nil && *e.Payload.Errors[0].Message == "access denied, authorization failed" {
-				return fmt.Errorf("Please check the settings of IP-based allowlisting in CrowdStrike Falcon Console. %s", e)
+				return fmt.Errorf("please check the settings of IP-based allowlisting in CrowdStrike Falcon Console. %s", e)
 			}
-			return fmt.Errorf("Insufficient CrowdStrike privileges, please grant [Falcon Images Download: Read] to CrowdStrike API Key. Error was: %s", err)
+			return fmt.Errorf("Client authentication failed, ensure your client id and client secret are valid and are part of the same key pair. Error was: %s", err)
 		}
-		return fmt.Errorf("Could not autodiscover Falcon cloud region: %v", err)
+		return fmt.Errorf("could not autodiscover Falcon cloud region: %v", err)
 	}
 	// (2) Parse & save the cloud-region information
 	cld, err := CloudValidate(token.XCSRegion)
 	if err != nil {
-		return fmt.Errorf("Could not validate Falcon cloud region '%s' during autodiscover: %v", token.XCSRegion, err)
+		return fmt.Errorf(
+			"could not validate Falcon cloud region '%s' during autodiscover: %v",
+			token.XCSRegion,
+			err,
+		)
 	}
 	(*c) = cld
 
@@ -124,7 +151,7 @@ func (c *CloudType) Autodiscover(ctx context.Context, clientId, clientSecret str
 		oauth2.AuthenticateRevocation(clientId, clientSecret),
 	)
 	if err != nil {
-		return nil
+		return nil //nolint:nilerr
 	}
 	if err = AssertNoError(revocation.Payload.Errors); err != nil {
 		return err

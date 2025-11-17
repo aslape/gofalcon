@@ -36,11 +36,23 @@ type ClientService interface {
 
 	BlobPreviewExternalAssets(params *BlobPreviewExternalAssetsParams, opts ...ClientOption) (*BlobPreviewExternalAssetsOK, error)
 
+	CombinedEcosystemSubsidiaries(params *CombinedEcosystemSubsidiariesParams, opts ...ClientOption) (*CombinedEcosystemSubsidiariesOK, error)
+
+	DeleteExternalAssets(params *DeleteExternalAssetsParams, opts ...ClientOption) (*DeleteExternalAssetsOK, error)
+
+	GetEcosystemSubsidiaries(params *GetEcosystemSubsidiariesParams, opts ...ClientOption) (*GetEcosystemSubsidiariesOK, error)
+
 	GetExternalAssets(params *GetExternalAssetsParams, opts ...ClientOption) (*GetExternalAssetsOK, error)
 
 	PatchExternalAssets(params *PatchExternalAssetsParams, opts ...ClientOption) (*PatchExternalAssetsOK, error)
 
+	PostExternalAssetsInventoryV1(params *PostExternalAssetsInventoryV1Params, opts ...ClientOption) (*PostExternalAssetsInventoryV1OK, error)
+
+	QueryEcosystemSubsidiaries(params *QueryEcosystemSubsidiariesParams, opts ...ClientOption) (*QueryEcosystemSubsidiariesOK, error)
+
 	QueryExternalAssets(params *QueryExternalAssetsParams, opts ...ClientOption) (*QueryExternalAssetsOK, error)
+
+	QueryExternalAssetsV2(params *QueryExternalAssetsV2Params, opts ...ClientOption) (*QueryExternalAssetsV2OK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -99,7 +111,7 @@ func (a *Client) BlobDownloadExternalAssets(params *BlobDownloadExternalAssetsPa
 		ID:                 "blob-download-external-assets",
 		Method:             "GET",
 		PathPattern:        "/fem/entities/blobs-download/v1",
-		ProducesMediaTypes: []string{"application/octet-stream"},
+		ProducesMediaTypes: []string{"application/json", "application/octet-stream"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
@@ -162,6 +174,120 @@ func (a *Client) BlobPreviewExternalAssets(params *BlobPreviewExternalAssetsPara
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for blob-preview-external-assets: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+CombinedEcosystemSubsidiaries retrieves a list of ecosystem subsidiaries with their detailed information
+*/
+func (a *Client) CombinedEcosystemSubsidiaries(params *CombinedEcosystemSubsidiariesParams, opts ...ClientOption) (*CombinedEcosystemSubsidiariesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCombinedEcosystemSubsidiariesParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "combined-ecosystem-subsidiaries",
+		Method:             "GET",
+		PathPattern:        "/fem/combined/ecosystem-subsidiaries/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CombinedEcosystemSubsidiariesReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CombinedEcosystemSubsidiariesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for combined-ecosystem-subsidiaries: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+DeleteExternalAssets deletes multiple external assets
+*/
+func (a *Client) DeleteExternalAssets(params *DeleteExternalAssetsParams, opts ...ClientOption) (*DeleteExternalAssetsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteExternalAssetsParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "delete-external-assets",
+		Method:             "DELETE",
+		PathPattern:        "/fem/entities/external-assets/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteExternalAssetsReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteExternalAssetsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for delete-external-assets: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetEcosystemSubsidiaries retrieves detailed information about ecosystem subsidiaries by ID
+*/
+func (a *Client) GetEcosystemSubsidiaries(params *GetEcosystemSubsidiariesParams, opts ...ClientOption) (*GetEcosystemSubsidiariesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetEcosystemSubsidiariesParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "get-ecosystem-subsidiaries",
+		Method:             "GET",
+		PathPattern:        "/fem/entities/ecosystem-subsidiaries/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetEcosystemSubsidiariesReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetEcosystemSubsidiariesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get-ecosystem-subsidiaries: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -242,6 +368,82 @@ func (a *Client) PatchExternalAssets(params *PatchExternalAssetsParams, opts ...
 }
 
 /*
+PostExternalAssetsInventoryV1 adds external assets for external asset scanning
+*/
+func (a *Client) PostExternalAssetsInventoryV1(params *PostExternalAssetsInventoryV1Params, opts ...ClientOption) (*PostExternalAssetsInventoryV1OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostExternalAssetsInventoryV1Params()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "post-external-assets-inventory-v1",
+		Method:             "POST",
+		PathPattern:        "/fem/entities/external-asset-inventory/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PostExternalAssetsInventoryV1Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostExternalAssetsInventoryV1OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for post-external-assets-inventory-v1: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+QueryEcosystemSubsidiaries retrieves a list of i ds for ecosystem subsidiaries use these i ds with the entities ecosystem subsidiaries v1 endpoints
+*/
+func (a *Client) QueryEcosystemSubsidiaries(params *QueryEcosystemSubsidiariesParams, opts ...ClientOption) (*QueryEcosystemSubsidiariesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewQueryEcosystemSubsidiariesParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "query-ecosystem-subsidiaries",
+		Method:             "GET",
+		PathPattern:        "/fem/queries/ecosystem-subsidiaries/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &QueryEcosystemSubsidiariesReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*QueryEcosystemSubsidiariesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for query-ecosystem-subsidiaries: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
 QueryExternalAssets gets a list of external asset i ds that match the provided filter conditions use these i ds with the entities external assets v1 endpoints
 */
 func (a *Client) QueryExternalAssets(params *QueryExternalAssetsParams, opts ...ClientOption) (*QueryExternalAssetsOK, error) {
@@ -276,6 +478,44 @@ func (a *Client) QueryExternalAssets(params *QueryExternalAssetsParams, opts ...
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for query-external-assets: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+QueryExternalAssetsV2 gets a list of external asset i ds that match the provided filter conditions use these i ds with the entities external assets v1 endpoint
+*/
+func (a *Client) QueryExternalAssetsV2(params *QueryExternalAssetsV2Params, opts ...ClientOption) (*QueryExternalAssetsV2OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewQueryExternalAssetsV2Params()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "query-external-assets-v2",
+		Method:             "GET",
+		PathPattern:        "/fem/queries/external-assets/v2",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &QueryExternalAssetsV2Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*QueryExternalAssetsV2OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for query-external-assets-v2: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

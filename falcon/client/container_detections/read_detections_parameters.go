@@ -64,19 +64,28 @@ type ReadDetectionsParams struct {
 
 	/* Filter.
 
-	   Filter images using a query in Falcon Query Language (FQL). Supported filters:  cid,detection_type,image_registry,image_repository,image_tag
+	     Filter images detections using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `cid`
+	- `detection_type`
+	- `image_digest`
+	- `image_registry`
+	- `image_repository`
+	- `image_tag`
+	- `severity`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
@@ -97,7 +106,18 @@ func (o *ReadDetectionsParams) WithDefaults() *ReadDetectionsParams {
 //
 // All values with no default are reset to their zero value.
 func (o *ReadDetectionsParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(100)
+	)
+
+	val := ReadDetectionsParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the read detections params

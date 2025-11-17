@@ -70,13 +70,15 @@ type ReadCombinedVulnerabilitiesInfoParams struct {
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
@@ -97,7 +99,18 @@ func (o *ReadCombinedVulnerabilitiesInfoParams) WithDefaults() *ReadCombinedVuln
 //
 // All values with no default are reset to their zero value.
 func (o *ReadCombinedVulnerabilitiesInfoParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(100)
+	)
+
+	val := ReadCombinedVulnerabilitiesInfoParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the read combined vulnerabilities info params

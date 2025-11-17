@@ -64,25 +64,49 @@ type GetCombinedImagesParams struct {
 
 	/* Filter.
 
-	   Filter images using a query in Falcon Query Language (FQL). Supported filters:  container_id, container_running_status, cve_id, detection_name, detection_severity, first_seen, image_digest, image_id, registry, repository, tag, vulnerability_severity
+	     Filter images using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `ai_related`
+	- `container_id`
+	- `container_running_status`
+	- `cve_id`
+	- `detection_name`
+	- `detection_severity`
+	- `first_seen`
+	- `image_digest`
+	- `image_id`
+	- `registry`
+	- `repository`
+	- `tag`
+	- `vulnerability_severity`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve [1-100]
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   The fields to sort the records on. Supported columns:  [first_seen highest_detection_severity highest_vulnerability_severity image_digest image_id registry repository tag]
+	     The fields to sort the records on. Supported columns:
+	- `first_seen`
+	- `highest_detection_severity`
+	- `highest_vulnerability_severity`
+	- `image_digest`
+	- `image_id`
+	- `registry`
+	- `repository`
+	- `source`
+	- `tag`
 	*/
 	Sort *string
 
@@ -103,7 +127,18 @@ func (o *GetCombinedImagesParams) WithDefaults() *GetCombinedImagesParams {
 //
 // All values with no default are reset to their zero value.
 func (o *GetCombinedImagesParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(100)
+	)
+
+	val := GetCombinedImagesParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the get combined images params

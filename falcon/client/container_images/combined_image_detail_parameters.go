@@ -64,19 +64,31 @@ type CombinedImageDetailParams struct {
 
 	/* Filter.
 
-	   Filter images using a query in Falcon Query Language (FQL). Supported filters:  registry,repository,tag
+	     Filter images using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `arch`
+	- `base_os`
+	- `cid`
+	- `first_seen`
+	- `image_digest`
+	- `image_id`
+	- `registry`
+	- `repository`
+	- `source`
+	- `tag`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 100.
+
+	   Default: 100
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
@@ -109,7 +121,18 @@ func (o *CombinedImageDetailParams) WithDefaults() *CombinedImageDetailParams {
 //
 // All values with no default are reset to their zero value.
 func (o *CombinedImageDetailParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(100)
+	)
+
+	val := CombinedImageDetailParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the combined image detail params
