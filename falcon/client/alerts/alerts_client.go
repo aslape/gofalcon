@@ -40,6 +40,8 @@ type ClientService interface {
 
 	PostAggregatesAlertsV1(params *PostAggregatesAlertsV1Params, opts ...ClientOption) (*PostAggregatesAlertsV1OK, error)
 
+	PostCombinedAlertsV1(params *PostCombinedAlertsV1Params, opts ...ClientOption) (*PostCombinedAlertsV1OK, error)
+
 	PostEntitiesAlertsV1(params *PostEntitiesAlertsV1Params, opts ...ClientOption) (*PostEntitiesAlertsV1OK, error)
 
 	QueryV2(params *QueryV2Params, opts ...ClientOption) (*QueryV2OK, error)
@@ -88,7 +90,7 @@ func (a *Client) GetAggregateV2(params *GetAggregateV2Params, opts ...ClientOpti
 }
 
 /*
-GetQueriesAlertsV1 retrieves all alerts ids that match a given query
+GetQueriesAlertsV1 deprecateds please use version v2 of this endpoint retrieves all alerts ids that match a given query
 */
 func (a *Client) GetQueriesAlertsV1(params *GetQueriesAlertsV1Params, opts ...ClientOption) (*GetQueriesAlertsV1OK, error) {
 	// TODO: Validate the params before sending
@@ -164,7 +166,7 @@ func (a *Client) GetV2(params *GetV2Params, opts ...ClientOption) (*GetV2OK, err
 }
 
 /*
-PatchEntitiesAlertsV2 performs actions on alerts identified by composite ID s in request each action has a name and a description which describes what the action does if a request adds and removes tag in a single request the order of processing would be to remove tags before adding new ones in
+PatchEntitiesAlertsV2 deprecateds please use version v3 of this endpoint perform actions on alerts identified by composite ID s in request each action has a name and a description which describes what the action does if a request adds and removes tag in a single request the order of processing would be to remove tags before adding new ones in
 */
 func (a *Client) PatchEntitiesAlertsV2(params *PatchEntitiesAlertsV2Params, opts ...ClientOption) (*PatchEntitiesAlertsV2OK, error) {
 	// TODO: Validate the params before sending
@@ -202,7 +204,7 @@ func (a *Client) PatchEntitiesAlertsV2(params *PatchEntitiesAlertsV2Params, opts
 }
 
 /*
-PostAggregatesAlertsV1 retrieves aggregate values for alerts across all c i ds
+PostAggregatesAlertsV1 deprecateds please use version v2 of this endpoint retrieves aggregate values for alerts across all c i ds
 */
 func (a *Client) PostAggregatesAlertsV1(params *PostAggregatesAlertsV1Params, opts ...ClientOption) (*PostAggregatesAlertsV1OK, error) {
 	// TODO: Validate the params before sending
@@ -240,7 +242,45 @@ func (a *Client) PostAggregatesAlertsV1(params *PostAggregatesAlertsV1Params, op
 }
 
 /*
-PostEntitiesAlertsV1 retrieves all alerts given their ids
+PostCombinedAlertsV1 retrieves all alerts that match a particular f q l filter this API is intended for retrieval of large amounts of alerts 10k using a pagination based on a after token if you need to use offset pagination consider using g e t alerts queries alerts and p o s t alerts entities alerts a p is
+*/
+func (a *Client) PostCombinedAlertsV1(params *PostCombinedAlertsV1Params, opts ...ClientOption) (*PostCombinedAlertsV1OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostCombinedAlertsV1Params()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PostCombinedAlertsV1",
+		Method:             "POST",
+		PathPattern:        "/alerts/combined/alerts/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PostCombinedAlertsV1Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostCombinedAlertsV1OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PostCombinedAlertsV1: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+PostEntitiesAlertsV1 deprecateds please use version v2 of this endpoint retrieves all alerts given their ids
 */
 func (a *Client) PostEntitiesAlertsV1(params *PostEntitiesAlertsV1Params, opts ...ClientOption) (*PostEntitiesAlertsV1OK, error) {
 	// TODO: Validate the params before sending

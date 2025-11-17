@@ -64,25 +64,50 @@ type ClusterCombinedParams struct {
 
 	/* Filter.
 
-	   Search Kubernetes clusters using a query in Falcon Query Language (FQL). Supported filters:  access,agent_status,cid,cloud_account_id,cloud_name,cloud_region,cluster_id,cluster_name,cluster_status,container_count,iar_coverage,kubernetes_version,last_seen,management_status,node_count,pod_count,tags
+	     Search Kubernetes clusters using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `access`
+	- `agent_id`
+	- `agent_status`
+	- `agent_type`
+	- `cid`
+	- `cloud_account_id`
+	- `cloud_name`
+	- `cloud_region`
+	- `cloud_service`
+	- `cluster_id`
+	- `cluster_name`
+	- `cluster_status`
+	- `container_count`
+	- `iar_coverage`
+	- `kac_agent_id`
+	- `kubernetes_version`
+	- `last_seen`
+	- `management_status`
+	- `namespace`
+	- `node_count`
+	- `pod_count`
+	- `pod_name`
+	- `tags`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 200.
+
+	   Default: 200
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   Field to sort results by
+	   The fields to sort the records on.
 	*/
 	Sort *string
 
@@ -103,7 +128,18 @@ func (o *ClusterCombinedParams) WithDefaults() *ClusterCombinedParams {
 //
 // All values with no default are reset to their zero value.
 func (o *ClusterCombinedParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(200)
+	)
+
+	val := ClusterCombinedParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the cluster combined params

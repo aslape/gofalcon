@@ -26,6 +26,9 @@ type DomainDiscoverAPIIoTHost struct {
 	// The user account control properties in Active Directory.
 	AdUserAccountControl int32 `json:"ad_user_account_control,omitempty"`
 
+	// Whether the asset is a virtual server or not (Yes, No)
+	AdVirtualServer string `json:"ad_virtual_server,omitempty"`
+
 	// The version of the Falcon sensor that's installed on the asset.
 	AgentVersion string `json:"agent_version,omitempty"`
 
@@ -80,6 +83,9 @@ type DomainDiscoverAPIIoTHost struct {
 
 	// How the server is classified, such as production, development, disaster recovery, or user acceptance testing.
 	Classification string `json:"classification,omitempty"`
+
+	// The composite internet exposure of the asset
+	CompositeInternetExposure string `json:"composite_internet_exposure,omitempty"`
 
 	// The asset role or roles assigned to the asset automatically (Jump host, Highly connected, Highly active, Server by behavior, DHCP server, DNS server, FTP server, SSH server, or Web server).
 	ComputedAssetRoles []string `json:"computed_asset_roles"`
@@ -235,6 +241,9 @@ type DomainDiscoverAPIIoTHost struct {
 	// Required: true
 	ID *string `json:"id"`
 
+	// imported host id
+	ImportedHostID string `json:"imported_host_id,omitempty"`
+
 	// Whether the asset is exposed to the internet (Yes, No or Pending).
 	InternetExposure string `json:"internet_exposure,omitempty"`
 
@@ -246,6 +255,12 @@ type DomainDiscoverAPIIoTHost struct {
 
 	// The username of the account that manually assigned the internet exposure level
 	InternetExposureUsername string `json:"internet_exposure_username,omitempty"`
+
+	// iot imported
+	IotImported *DomainIotImportedHost `json:"iot_imported,omitempty"`
+
+	// iot tags
+	IotTags []string `json:"iot_tags"`
 
 	// For Linux and Mac hosts: the major version, minor version, and patch version of the kernel for the asset. For Windows hosts: the build number of the asset.
 	KernelVersion string `json:"kernel_version,omitempty"`
@@ -336,6 +351,9 @@ type DomainDiscoverAPIIoTHost struct {
 
 	// The organizational unit of the asset.
 	Ou string `json:"ou,omitempty"`
+
+	// The organizational units of the asset.
+	Ous []string `json:"ous"`
 
 	// Whether a user overrode automatically assigned asset roles to manually assign a role to the asset (true or false).
 	OverrideAssetRoles bool `json:"override_asset_roles,omitempty"`
@@ -438,6 +456,15 @@ type DomainDiscoverAPIIoTHost struct {
 
 	// The external ID of the IoT Device in 3rd Party System(Claroty Xdome)
 	XdomeID string `json:"xdome_id,omitempty"`
+
+	// The hostnames of the sources that discovered the asset.
+	XiotDiscovererHostnames []string `json:"xiot_discoverer_hostnames"`
+
+	// The tags of the sources that discovered the asset.
+	XiotDiscovererTags []string `json:"xiot_discoverer_tags"`
+
+	// The hostname of the last source that discovered the asset.
+	XiotLastDiscovererHostname string `json:"xiot_last_discoverer_hostname,omitempty"`
 }
 
 // Validate validates this domain discover API io t host
@@ -465,6 +492,10 @@ func (m *DomainDiscoverAPIIoTHost) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIotImported(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -612,6 +643,25 @@ func (m *DomainDiscoverAPIIoTHost) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *DomainDiscoverAPIIoTHost) validateIotImported(formats strfmt.Registry) error {
+	if swag.IsZero(m.IotImported) { // not required
+		return nil
+	}
+
+	if m.IotImported != nil {
+		if err := m.IotImported.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("iot_imported")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("iot_imported")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *DomainDiscoverAPIIoTHost) validateMountStorageInfo(formats strfmt.Registry) error {
 	if swag.IsZero(m.MountStorageInfo) { // not required
 		return nil
@@ -722,6 +772,10 @@ func (m *DomainDiscoverAPIIoTHost) ContextValidate(ctx context.Context, formats 
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateIotImported(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateMountStorageInfo(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -829,6 +883,27 @@ func (m *DomainDiscoverAPIIoTHost) contextValidateFieldMetadata(ctx context.Cont
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *DomainDiscoverAPIIoTHost) contextValidateIotImported(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.IotImported != nil {
+
+		if swag.IsZero(m.IotImported) { // not required
+			return nil
+		}
+
+		if err := m.IotImported.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("iot_imported")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("iot_imported")
+			}
+			return err
+		}
 	}
 
 	return nil

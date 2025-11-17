@@ -32,11 +32,15 @@ type ClientOption func(*runtime.ClientOperation)
 type ClientService interface {
 	ReadPackagesByFixableVulnCount(params *ReadPackagesByFixableVulnCountParams, opts ...ClientOption) (*ReadPackagesByFixableVulnCountOK, error)
 
+	ReadPackagesByImageCount(params *ReadPackagesByImageCountParams, opts ...ClientOption) (*ReadPackagesByImageCountOK, error)
+
 	ReadPackagesByVulnCount(params *ReadPackagesByVulnCountParams, opts ...ClientOption) (*ReadPackagesByVulnCountOK, error)
 
 	ReadPackagesCombined(params *ReadPackagesCombinedParams, opts ...ClientOption) (*ReadPackagesCombinedOK, error)
 
 	ReadPackagesCombinedExport(params *ReadPackagesCombinedExportParams, opts ...ClientOption) (*ReadPackagesCombinedExportOK, error)
+
+	ReadPackagesCombinedV2(params *ReadPackagesCombinedV2Params, opts ...ClientOption) (*ReadPackagesCombinedV2OK, error)
 
 	ReadPackagesCountByZeroDay(params *ReadPackagesCountByZeroDayParams, opts ...ClientOption) (*ReadPackagesCountByZeroDayOK, error)
 
@@ -78,6 +82,44 @@ func (a *Client) ReadPackagesByFixableVulnCount(params *ReadPackagesByFixableVul
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for ReadPackagesByFixableVulnCount: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+ReadPackagesByImageCount retrieves the n most frequently used packages across images
+*/
+func (a *Client) ReadPackagesByImageCount(params *ReadPackagesByImageCountParams, opts ...ClientOption) (*ReadPackagesByImageCountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewReadPackagesByImageCountParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "ReadPackagesByImageCount",
+		Method:             "GET",
+		PathPattern:        "/container-security/aggregates/packages/by-image-count/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ReadPackagesByImageCountReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ReadPackagesByImageCountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for ReadPackagesByImageCount: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -158,7 +200,7 @@ func (a *Client) ReadPackagesCombined(params *ReadPackagesCombinedParams, opts .
 }
 
 /*
-ReadPackagesCombinedExport retrieves packages identified by the provided filter criteria for the purpose of export
+ReadPackagesCombinedExport retrieves a paginated list of packages identified by the provided filter criteria used for export maximum page size 100 maximum available packages 10 000
 */
 func (a *Client) ReadPackagesCombinedExport(params *ReadPackagesCombinedExportParams, opts ...ClientOption) (*ReadPackagesCombinedExportOK, error) {
 	// TODO: Validate the params before sending
@@ -192,6 +234,44 @@ func (a *Client) ReadPackagesCombinedExport(params *ReadPackagesCombinedExportPa
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for ReadPackagesCombinedExport: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+ReadPackagesCombinedV2 retrieves packages identified by the provided filter criteria
+*/
+func (a *Client) ReadPackagesCombinedV2(params *ReadPackagesCombinedV2Params, opts ...ClientOption) (*ReadPackagesCombinedV2OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewReadPackagesCombinedV2Params()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "ReadPackagesCombinedV2",
+		Method:             "GET",
+		PathPattern:        "/container-security/combined/packages/v2",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ReadPackagesCombinedV2Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ReadPackagesCombinedV2OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for ReadPackagesCombinedV2: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

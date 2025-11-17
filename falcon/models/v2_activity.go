@@ -19,9 +19,18 @@ import (
 // swagger:model v2.Activity
 type V2Activity struct {
 
+	// class
+	Class string `json:"class,omitempty"`
+
 	// id
 	// Required: true
 	ID *string `json:"id"`
+
+	// inline configuration
+	InlineConfiguration *V2InlineConfig `json:"inline_configuration,omitempty"`
+
+	// Optional user provided name for the activity, if not specified a default of the name for that activity will be used.
+	Name string `json:"name,omitempty"`
 
 	// next
 	Next []string `json:"next"`
@@ -29,6 +38,9 @@ type V2Activity struct {
 	// properties
 	// Required: true
 	Properties interface{} `json:"properties"`
+
+	// version constraint
+	VersionConstraint string `json:"version_constraint,omitempty"`
 }
 
 // Validate validates this v2 activity
@@ -36,6 +48,10 @@ func (m *V2Activity) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInlineConfiguration(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -58,6 +74,25 @@ func (m *V2Activity) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *V2Activity) validateInlineConfiguration(formats strfmt.Registry) error {
+	if swag.IsZero(m.InlineConfiguration) { // not required
+		return nil
+	}
+
+	if m.InlineConfiguration != nil {
+		if err := m.InlineConfiguration.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("inline_configuration")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("inline_configuration")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *V2Activity) validateProperties(formats strfmt.Registry) error {
 
 	if m.Properties == nil {
@@ -67,8 +102,38 @@ func (m *V2Activity) validateProperties(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this v2 activity based on context it is used
+// ContextValidate validate this v2 activity based on the context it is used
 func (m *V2Activity) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateInlineConfiguration(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *V2Activity) contextValidateInlineConfiguration(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.InlineConfiguration != nil {
+
+		if swag.IsZero(m.InlineConfiguration) { // not required
+			return nil
+		}
+
+		if err := m.InlineConfiguration.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("inline_configuration")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("inline_configuration")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

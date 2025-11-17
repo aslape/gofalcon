@@ -64,25 +64,49 @@ type NodeCombinedParams struct {
 
 	/* Filter.
 
-	   Search Kubernetes nodes using a query in Falcon Query Language (FQL). Supported filters:  aid,annotations_list,cid,cloud_account_id,cloud_name,cloud_region,cluster_id,cluster_name,container_count,container_runtime_version,first_seen,image_digest,ipv4,last_seen,linux_sensor_coverage,node_name,pod_count
+	     Search Kubernetes nodes using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `agent_id`
+	- `agent_type`
+	- `annotations_list`
+	- `cid`
+	- `cloud_account_id`
+	- `cloud_name`
+	- `cloud_region`
+	- `cloud_service`
+	- `cluster_id`
+	- `cluster_name`
+	- `container_count`
+	- `container_runtime_version`
+	- `first_seen`
+	- `image_digest`
+	- `ipv4`
+	- `kac_agent_id`
+	- `last_seen`
+	- `linux_sensor_coverage`
+	- `node_name`
+	- `node_uid`
+	- `pod_count`
+	- `resource_status`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 200.
+
+	   Default: 200
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   Field to sort results by
+	   The fields to sort the records on.
 	*/
 	Sort *string
 
@@ -103,7 +127,18 @@ func (o *NodeCombinedParams) WithDefaults() *NodeCombinedParams {
 //
 // All values with no default are reset to their zero value.
 func (o *NodeCombinedParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(200)
+	)
+
+	val := NodeCombinedParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the node combined params

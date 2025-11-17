@@ -27,6 +27,14 @@ type EntitiesODSScanRequest struct {
 	// Required: true
 	CloudMlLevelPrevention *int32 `json:"cloud_ml_level_prevention"`
 
+	// cloud pup adware level detection
+	// Required: true
+	CloudPupAdwareLevelDetection *int32 `json:"cloud_pup_adware_level_detection"`
+
+	// cloud pup adware level prevention
+	// Required: true
+	CloudPupAdwareLevelPrevention *int32 `json:"cloud_pup_adware_level_prevention"`
+
 	// cpu priority
 	// Required: true
 	CPUPriority *int32 `json:"cpu_priority"`
@@ -58,10 +66,6 @@ type EntitiesODSScanRequest struct {
 	// max duration
 	// Required: true
 	MaxDuration *int32 `json:"max_duration"`
-
-	// max file size
-	// Required: true
-	MaxFileSize *int32 `json:"max_file_size"`
 
 	// pause duration
 	// Required: true
@@ -100,6 +104,14 @@ func (m *EntitiesODSScanRequest) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCloudPupAdwareLevelDetection(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCloudPupAdwareLevelPrevention(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCPUPriority(formats); err != nil {
 		res = append(res, err)
 	}
@@ -129,10 +141,6 @@ func (m *EntitiesODSScanRequest) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMaxDuration(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMaxFileSize(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -178,6 +186,24 @@ func (m *EntitiesODSScanRequest) validateCloudMlLevelDetection(formats strfmt.Re
 func (m *EntitiesODSScanRequest) validateCloudMlLevelPrevention(formats strfmt.Registry) error {
 
 	if err := validate.Required("cloud_ml_level_prevention", "body", m.CloudMlLevelPrevention); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *EntitiesODSScanRequest) validateCloudPupAdwareLevelDetection(formats strfmt.Registry) error {
+
+	if err := validate.Required("cloud_pup_adware_level_detection", "body", m.CloudPupAdwareLevelDetection); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *EntitiesODSScanRequest) validateCloudPupAdwareLevelPrevention(formats strfmt.Registry) error {
+
+	if err := validate.Required("cloud_pup_adware_level_prevention", "body", m.CloudPupAdwareLevelPrevention); err != nil {
 		return err
 	}
 
@@ -250,15 +276,6 @@ func (m *EntitiesODSScanRequest) validateInitiatedFrom(formats strfmt.Registry) 
 func (m *EntitiesODSScanRequest) validateMaxDuration(formats strfmt.Registry) error {
 
 	if err := validate.Required("max_duration", "body", m.MaxDuration); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *EntitiesODSScanRequest) validateMaxFileSize(formats strfmt.Registry) error {
-
-	if err := validate.Required("max_file_size", "body", m.MaxFileSize); err != nil {
 		return err
 	}
 

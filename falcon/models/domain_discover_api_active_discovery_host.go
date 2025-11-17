@@ -19,7 +19,13 @@ import (
 // swagger:model domain.DiscoverAPIActiveDiscoveryHost
 type DomainDiscoverAPIActiveDiscoveryHost struct {
 
-	// The open ports discovered on the asset.
+	// The ID of the network where the host was last seen
+	LastSeenNetworkID string `json:"last_seen_network_id,omitempty"`
+
+	// The ID of the site where the host was last seen
+	LastSeenSiteID string `json:"last_seen_site_id,omitempty"`
+
+	// The networks discovered on the asset.
 	Networks []*DomainDiscoverAPIActiveDiscoveryNetwork `json:"networks"`
 
 	// The open ports discovered on the asset.

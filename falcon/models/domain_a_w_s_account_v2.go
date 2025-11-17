@@ -73,11 +73,17 @@ type DomainAWSAccountV2 struct {
 	// cloud scopes
 	CloudScopes []*DomainCloudScope `json:"cloud_scopes"`
 
+	// cloudformation root stack arn
+	CloudformationRootStackArn string `json:"cloudformation_root_stack_arn,omitempty"`
+
+	// cloudformation update url
+	CloudformationUpdateURL string `json:"cloudformation_update_url,omitempty"`
+
 	// cloudformation url
 	CloudformationURL string `json:"cloudformation_url,omitempty"`
 
 	// conditions
-	Conditions []*DomainCondition `json:"conditions"`
+	Conditions []*StatemgmtCondition `json:"conditions"`
 
 	// cspm enabled
 	CspmEnabled bool `json:"cspm_enabled,omitempty"`
@@ -88,6 +94,15 @@ type DomainAWSAccountV2 struct {
 	// d4c migrated
 	D4cMigrated bool `json:"d4c_migrated,omitempty"`
 
+	// dspm enabled
+	DspmEnabled bool `json:"dspm_enabled,omitempty"`
+
+	// dspm host account id
+	DspmHostAccountID string `json:"dspm_host_account_id,omitempty"`
+
+	// dspm role arn
+	DspmRoleArn string `json:"dspm_role_arn,omitempty"`
+
 	// environment
 	Environment string `json:"environment,omitempty"`
 
@@ -96,6 +111,12 @@ type DomainAWSAccountV2 struct {
 
 	// ID assigned for use with cross account IAM role access.
 	ExternalID string `json:"external_id,omitempty"`
+
+	// falcon client id
+	FalconClientID string `json:"falcon_client_id,omitempty"`
+
+	// features
+	Features []*DomainProductFeatures `json:"features"`
 
 	// The full arn of the IAM role created in this account to control access.
 	IamRoleArn string `json:"iam_role_arn,omitempty"`
@@ -107,6 +128,9 @@ type DomainAWSAccountV2 struct {
 	// Required: true
 	InventoryFilter []*DomainAWSInventoryFilterSetting `json:"inventory_filter"`
 
+	// is cloud registration
+	IsCloudRegistration bool `json:"is_cloud_registration,omitempty"`
+
 	// Is CSPM Lite enabled.
 	IsCspmLite bool `json:"is_cspm_lite,omitempty"`
 
@@ -114,8 +138,14 @@ type DomainAWSAccountV2 struct {
 	// Required: true
 	IsCustomRolename *bool `json:"is_custom_rolename"`
 
+	// is delegated admin
+	IsDelegatedAdmin bool `json:"is_delegated_admin,omitempty"`
+
 	// is master
 	IsMaster bool `json:"is_master,omitempty"`
+
+	// ngsiem enabled
+	NgsiemEnabled bool `json:"ngsiem_enabled,omitempty"`
 
 	// Up to 34 character AWS provided unique identifier for the organization.
 	OrganizationID string `json:"organization_id,omitempty"`
@@ -130,11 +160,20 @@ type DomainAWSAccountV2 struct {
 	// Format: date-time
 	RemediationTouAccepted strfmt.DateTime `json:"remediation_tou_accepted,omitempty"`
 
+	// resource name prefix
+	ResourceNamePrefix string `json:"resource_name_prefix,omitempty"`
+
+	// resource name suffix
+	ResourceNameSuffix string `json:"resource_name_suffix,omitempty"`
+
 	// 12 digit AWS provided unique identifier for the root account (of the organization this account belongs to).
 	RootAccountID string `json:"root_account_id,omitempty"`
 
 	// root iam role
 	RootIamRole bool `json:"root_iam_role,omitempty"`
+
+	// s3 url
+	S3URL string `json:"s3_url,omitempty"`
 
 	// secondary role arn
 	SecondaryRoleArn string `json:"secondary_role_arn,omitempty"`
@@ -152,11 +191,23 @@ type DomainAWSAccountV2 struct {
 	// target ous
 	TargetOus []string `json:"target_ous"`
 
+	// template source region
+	TemplateSourceRegion string `json:"template_source_region,omitempty"`
+
 	// use existing cloudtrail
 	UseExistingCloudtrail bool `json:"use_existing_cloudtrail,omitempty"`
 
 	// valid
 	Valid bool `json:"valid,omitempty"`
+
+	// vulnerability scanning enabled
+	VulnerabilityScanningEnabled bool `json:"vulnerability_scanning_enabled,omitempty"`
+
+	// vulnerability scanning host account id
+	VulnerabilityScanningHostAccountID string `json:"vulnerability_scanning_host_account_id,omitempty"`
+
+	// vulnerability scanning role arn
+	VulnerabilityScanningRoleArn string `json:"vulnerability_scanning_role_arn,omitempty"`
 }
 
 // Validate validates this domain a w s account v2
@@ -192,6 +243,10 @@ func (m *DomainAWSAccountV2) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateD4c(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFeatures(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -363,6 +418,32 @@ func (m *DomainAWSAccountV2) validateD4c(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *DomainAWSAccountV2) validateFeatures(formats strfmt.Registry) error {
+	if swag.IsZero(m.Features) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Features); i++ {
+		if swag.IsZero(m.Features[i]) { // not required
+			continue
+		}
+
+		if m.Features[i] != nil {
+			if err := m.Features[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("features" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("features" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *DomainAWSAccountV2) validateInventoryFilter(formats strfmt.Registry) error {
 
 	if err := validate.Required("inventory_filter", "body", m.InventoryFilter); err != nil {
@@ -437,6 +518,10 @@ func (m *DomainAWSAccountV2) ContextValidate(ctx context.Context, formats strfmt
 	}
 
 	if err := m.contextValidateD4c(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateFeatures(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -541,6 +626,31 @@ func (m *DomainAWSAccountV2) contextValidateD4c(ctx context.Context, formats str
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *DomainAWSAccountV2) contextValidateFeatures(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Features); i++ {
+
+		if m.Features[i] != nil {
+
+			if swag.IsZero(m.Features[i]) { // not required
+				return nil
+			}
+
+			if err := m.Features[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("features" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("features" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

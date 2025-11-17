@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewCombinedImageIssuesSummaryParams creates a new CombinedImageIssuesSummaryParams object,
@@ -63,25 +64,37 @@ type CombinedImageIssuesSummaryParams struct {
 
 	/* Cid.
 
-	   CID
+	   CS Customer ID
 	*/
 	Cid string
 
+	/* ImageDigest.
+
+	   Digest ID
+	*/
+	ImageDigest *string
+
+	/* IncludeBaseImageVuln.
+
+	   Include base image vulnerabilities.
+	*/
+	IncludeBaseImageVuln *bool
+
 	/* Registry.
 
-	   registry name
+	   Registry
 	*/
 	Registry string
 
 	/* Repository.
 
-	   repository name
+	   Repository name
 	*/
 	Repository string
 
 	/* Tag.
 
-	   tag name
+	   Tag name
 	*/
 	Tag string
 
@@ -102,7 +115,18 @@ func (o *CombinedImageIssuesSummaryParams) WithDefaults() *CombinedImageIssuesSu
 //
 // All values with no default are reset to their zero value.
 func (o *CombinedImageIssuesSummaryParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		includeBaseImageVulnDefault = bool(false)
+	)
+
+	val := CombinedImageIssuesSummaryParams{
+		IncludeBaseImageVuln: &includeBaseImageVulnDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the combined image issues summary params
@@ -147,6 +171,28 @@ func (o *CombinedImageIssuesSummaryParams) WithCid(cid string) *CombinedImageIss
 // SetCid adds the cid to the combined image issues summary params
 func (o *CombinedImageIssuesSummaryParams) SetCid(cid string) {
 	o.Cid = cid
+}
+
+// WithImageDigest adds the imageDigest to the combined image issues summary params
+func (o *CombinedImageIssuesSummaryParams) WithImageDigest(imageDigest *string) *CombinedImageIssuesSummaryParams {
+	o.SetImageDigest(imageDigest)
+	return o
+}
+
+// SetImageDigest adds the imageDigest to the combined image issues summary params
+func (o *CombinedImageIssuesSummaryParams) SetImageDigest(imageDigest *string) {
+	o.ImageDigest = imageDigest
+}
+
+// WithIncludeBaseImageVuln adds the includeBaseImageVuln to the combined image issues summary params
+func (o *CombinedImageIssuesSummaryParams) WithIncludeBaseImageVuln(includeBaseImageVuln *bool) *CombinedImageIssuesSummaryParams {
+	o.SetIncludeBaseImageVuln(includeBaseImageVuln)
+	return o
+}
+
+// SetIncludeBaseImageVuln adds the includeBaseImageVuln to the combined image issues summary params
+func (o *CombinedImageIssuesSummaryParams) SetIncludeBaseImageVuln(includeBaseImageVuln *bool) {
+	o.IncludeBaseImageVuln = includeBaseImageVuln
 }
 
 // WithRegistry adds the registry to the combined image issues summary params
@@ -197,6 +243,40 @@ func (o *CombinedImageIssuesSummaryParams) WriteToRequest(r runtime.ClientReques
 
 		if err := r.SetQueryParam("cid", qCid); err != nil {
 			return err
+		}
+	}
+
+	if o.ImageDigest != nil {
+
+		// query param image_digest
+		var qrImageDigest string
+
+		if o.ImageDigest != nil {
+			qrImageDigest = *o.ImageDigest
+		}
+		qImageDigest := qrImageDigest
+		if qImageDigest != "" {
+
+			if err := r.SetQueryParam("image_digest", qImageDigest); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.IncludeBaseImageVuln != nil {
+
+		// query param include_base_image_vuln
+		var qrIncludeBaseImageVuln bool
+
+		if o.IncludeBaseImageVuln != nil {
+			qrIncludeBaseImageVuln = *o.IncludeBaseImageVuln
+		}
+		qIncludeBaseImageVuln := swag.FormatBool(qrIncludeBaseImageVuln)
+		if qIncludeBaseImageVuln != "" {
+
+			if err := r.SetQueryParam("include_base_image_vuln", qIncludeBaseImageVuln); err != nil {
+				return err
+			}
 		}
 	}
 

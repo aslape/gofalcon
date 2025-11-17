@@ -74,14 +74,50 @@ type GetD4CAWSAccountScriptsAttachmentParams struct {
 	*/
 	AwsProfile *string
 
+	/* AwsRegion.
+
+	   The AWS region to be used during registration
+	*/
+	AwsRegion *string
+
 	// BehaviorAssessmentEnabled.
 	BehaviorAssessmentEnabled *string
 
-	/* CustomRoleName.
+	// DspmEnabled.
+	DspmEnabled *string
+
+	// DspmHostAccountID.
+	DspmHostAccountID *string
+
+	// DspmHostIntegrationRoleName.
+	DspmHostIntegrationRoleName *string
+
+	// DspmHostScannerRoleName.
+	DspmHostScannerRoleName *string
+
+	// DspmRegions.
+	DspmRegions []string
+
+	// DspmRole.
+	DspmRole *string
+
+	/* FalconClientID.
+
+	   The Falcon client ID used during registration
+	*/
+	FalconClientID *string
+
+	/* IamRoleArn.
 
 	   The custom IAM role to be used during registration
 	*/
-	CustomRoleName *string
+	IamRoleArn *string
+
+	/* IdpEnabled.
+
+	   Set to true to enable Identity Protection feature
+	*/
+	IdpEnabled *string
 
 	/* Ids.
 
@@ -95,12 +131,26 @@ type GetD4CAWSAccountScriptsAttachmentParams struct {
 	*/
 	OrganizationID *string
 
+	/* OrganizationalUnitIds.
+
+	   The AWS Organizational Unit IDs to be registered
+	*/
+	OrganizationalUnitIds []string
+
 	// SensorManagementEnabled.
 	SensorManagementEnabled *string
+
+	/* Tags.
+
+	   Base64 encoded JSON string to be used as AWS tags
+	*/
+	Tags *string
 
 	/* Template.
 
 	   Template to be rendered
+
+	   Default: "aws-bash"
 	*/
 	Template *string
 
@@ -124,7 +174,18 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) WithDefaults() *GetD4CAWSAccou
 //
 // All values with no default are reset to their zero value.
 func (o *GetD4CAWSAccountScriptsAttachmentParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		templateDefault = string("aws-bash")
+	)
+
+	val := GetD4CAWSAccountScriptsAttachmentParams{
+		Template: &templateDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the get d4 c a w s account scripts attachment params
@@ -182,6 +243,17 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) SetAwsProfile(awsProfile *stri
 	o.AwsProfile = awsProfile
 }
 
+// WithAwsRegion adds the awsRegion to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithAwsRegion(awsRegion *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetAwsRegion(awsRegion)
+	return o
+}
+
+// SetAwsRegion adds the awsRegion to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetAwsRegion(awsRegion *string) {
+	o.AwsRegion = awsRegion
+}
+
 // WithBehaviorAssessmentEnabled adds the behaviorAssessmentEnabled to the get d4 c a w s account scripts attachment params
 func (o *GetD4CAWSAccountScriptsAttachmentParams) WithBehaviorAssessmentEnabled(behaviorAssessmentEnabled *string) *GetD4CAWSAccountScriptsAttachmentParams {
 	o.SetBehaviorAssessmentEnabled(behaviorAssessmentEnabled)
@@ -193,15 +265,103 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) SetBehaviorAssessmentEnabled(b
 	o.BehaviorAssessmentEnabled = behaviorAssessmentEnabled
 }
 
-// WithCustomRoleName adds the customRoleName to the get d4 c a w s account scripts attachment params
-func (o *GetD4CAWSAccountScriptsAttachmentParams) WithCustomRoleName(customRoleName *string) *GetD4CAWSAccountScriptsAttachmentParams {
-	o.SetCustomRoleName(customRoleName)
+// WithDspmEnabled adds the dspmEnabled to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithDspmEnabled(dspmEnabled *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetDspmEnabled(dspmEnabled)
 	return o
 }
 
-// SetCustomRoleName adds the customRoleName to the get d4 c a w s account scripts attachment params
-func (o *GetD4CAWSAccountScriptsAttachmentParams) SetCustomRoleName(customRoleName *string) {
-	o.CustomRoleName = customRoleName
+// SetDspmEnabled adds the dspmEnabled to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetDspmEnabled(dspmEnabled *string) {
+	o.DspmEnabled = dspmEnabled
+}
+
+// WithDspmHostAccountID adds the dspmHostAccountID to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithDspmHostAccountID(dspmHostAccountID *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetDspmHostAccountID(dspmHostAccountID)
+	return o
+}
+
+// SetDspmHostAccountID adds the dspmHostAccountId to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetDspmHostAccountID(dspmHostAccountID *string) {
+	o.DspmHostAccountID = dspmHostAccountID
+}
+
+// WithDspmHostIntegrationRoleName adds the dspmHostIntegrationRoleName to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithDspmHostIntegrationRoleName(dspmHostIntegrationRoleName *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetDspmHostIntegrationRoleName(dspmHostIntegrationRoleName)
+	return o
+}
+
+// SetDspmHostIntegrationRoleName adds the dspmHostIntegrationRoleName to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetDspmHostIntegrationRoleName(dspmHostIntegrationRoleName *string) {
+	o.DspmHostIntegrationRoleName = dspmHostIntegrationRoleName
+}
+
+// WithDspmHostScannerRoleName adds the dspmHostScannerRoleName to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithDspmHostScannerRoleName(dspmHostScannerRoleName *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetDspmHostScannerRoleName(dspmHostScannerRoleName)
+	return o
+}
+
+// SetDspmHostScannerRoleName adds the dspmHostScannerRoleName to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetDspmHostScannerRoleName(dspmHostScannerRoleName *string) {
+	o.DspmHostScannerRoleName = dspmHostScannerRoleName
+}
+
+// WithDspmRegions adds the dspmRegions to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithDspmRegions(dspmRegions []string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetDspmRegions(dspmRegions)
+	return o
+}
+
+// SetDspmRegions adds the dspmRegions to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetDspmRegions(dspmRegions []string) {
+	o.DspmRegions = dspmRegions
+}
+
+// WithDspmRole adds the dspmRole to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithDspmRole(dspmRole *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetDspmRole(dspmRole)
+	return o
+}
+
+// SetDspmRole adds the dspmRole to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetDspmRole(dspmRole *string) {
+	o.DspmRole = dspmRole
+}
+
+// WithFalconClientID adds the falconClientID to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithFalconClientID(falconClientID *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetFalconClientID(falconClientID)
+	return o
+}
+
+// SetFalconClientID adds the falconClientId to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetFalconClientID(falconClientID *string) {
+	o.FalconClientID = falconClientID
+}
+
+// WithIamRoleArn adds the iamRoleArn to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithIamRoleArn(iamRoleArn *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetIamRoleArn(iamRoleArn)
+	return o
+}
+
+// SetIamRoleArn adds the iamRoleArn to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetIamRoleArn(iamRoleArn *string) {
+	o.IamRoleArn = iamRoleArn
+}
+
+// WithIdpEnabled adds the idpEnabled to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithIdpEnabled(idpEnabled *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetIdpEnabled(idpEnabled)
+	return o
+}
+
+// SetIdpEnabled adds the idpEnabled to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetIdpEnabled(idpEnabled *string) {
+	o.IdpEnabled = idpEnabled
 }
 
 // WithIds adds the ids to the get d4 c a w s account scripts attachment params
@@ -226,6 +386,17 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) SetOrganizationID(organization
 	o.OrganizationID = organizationID
 }
 
+// WithOrganizationalUnitIds adds the organizationalUnitIds to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithOrganizationalUnitIds(organizationalUnitIds []string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetOrganizationalUnitIds(organizationalUnitIds)
+	return o
+}
+
+// SetOrganizationalUnitIds adds the organizationalUnitIds to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetOrganizationalUnitIds(organizationalUnitIds []string) {
+	o.OrganizationalUnitIds = organizationalUnitIds
+}
+
 // WithSensorManagementEnabled adds the sensorManagementEnabled to the get d4 c a w s account scripts attachment params
 func (o *GetD4CAWSAccountScriptsAttachmentParams) WithSensorManagementEnabled(sensorManagementEnabled *string) *GetD4CAWSAccountScriptsAttachmentParams {
 	o.SetSensorManagementEnabled(sensorManagementEnabled)
@@ -235,6 +406,17 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) WithSensorManagementEnabled(se
 // SetSensorManagementEnabled adds the sensorManagementEnabled to the get d4 c a w s account scripts attachment params
 func (o *GetD4CAWSAccountScriptsAttachmentParams) SetSensorManagementEnabled(sensorManagementEnabled *string) {
 	o.SensorManagementEnabled = sensorManagementEnabled
+}
+
+// WithTags adds the tags to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) WithTags(tags *string) *GetD4CAWSAccountScriptsAttachmentParams {
+	o.SetTags(tags)
+	return o
+}
+
+// SetTags adds the tags to the get d4 c a w s account scripts attachment params
+func (o *GetD4CAWSAccountScriptsAttachmentParams) SetTags(tags *string) {
+	o.Tags = tags
 }
 
 // WithTemplate adds the template to the get d4 c a w s account scripts attachment params
@@ -295,6 +477,23 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) WriteToRequest(r runtime.Clien
 		}
 	}
 
+	if o.AwsRegion != nil {
+
+		// query param aws_region
+		var qrAwsRegion string
+
+		if o.AwsRegion != nil {
+			qrAwsRegion = *o.AwsRegion
+		}
+		qAwsRegion := qrAwsRegion
+		if qAwsRegion != "" {
+
+			if err := r.SetQueryParam("aws_region", qAwsRegion); err != nil {
+				return err
+			}
+		}
+	}
+
 	if o.BehaviorAssessmentEnabled != nil {
 
 		// query param behavior_assessment_enabled
@@ -312,18 +511,148 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) WriteToRequest(r runtime.Clien
 		}
 	}
 
-	if o.CustomRoleName != nil {
+	if o.DspmEnabled != nil {
 
-		// query param custom_role_name
-		var qrCustomRoleName string
+		// query param dspm_enabled
+		var qrDspmEnabled string
 
-		if o.CustomRoleName != nil {
-			qrCustomRoleName = *o.CustomRoleName
+		if o.DspmEnabled != nil {
+			qrDspmEnabled = *o.DspmEnabled
 		}
-		qCustomRoleName := qrCustomRoleName
-		if qCustomRoleName != "" {
+		qDspmEnabled := qrDspmEnabled
+		if qDspmEnabled != "" {
 
-			if err := r.SetQueryParam("custom_role_name", qCustomRoleName); err != nil {
+			if err := r.SetQueryParam("dspm_enabled", qDspmEnabled); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.DspmHostAccountID != nil {
+
+		// query param dspm_host_account_id
+		var qrDspmHostAccountID string
+
+		if o.DspmHostAccountID != nil {
+			qrDspmHostAccountID = *o.DspmHostAccountID
+		}
+		qDspmHostAccountID := qrDspmHostAccountID
+		if qDspmHostAccountID != "" {
+
+			if err := r.SetQueryParam("dspm_host_account_id", qDspmHostAccountID); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.DspmHostIntegrationRoleName != nil {
+
+		// query param dspm_host_integration_role_name
+		var qrDspmHostIntegrationRoleName string
+
+		if o.DspmHostIntegrationRoleName != nil {
+			qrDspmHostIntegrationRoleName = *o.DspmHostIntegrationRoleName
+		}
+		qDspmHostIntegrationRoleName := qrDspmHostIntegrationRoleName
+		if qDspmHostIntegrationRoleName != "" {
+
+			if err := r.SetQueryParam("dspm_host_integration_role_name", qDspmHostIntegrationRoleName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.DspmHostScannerRoleName != nil {
+
+		// query param dspm_host_scanner_role_name
+		var qrDspmHostScannerRoleName string
+
+		if o.DspmHostScannerRoleName != nil {
+			qrDspmHostScannerRoleName = *o.DspmHostScannerRoleName
+		}
+		qDspmHostScannerRoleName := qrDspmHostScannerRoleName
+		if qDspmHostScannerRoleName != "" {
+
+			if err := r.SetQueryParam("dspm_host_scanner_role_name", qDspmHostScannerRoleName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.DspmRegions != nil {
+
+		// binding items for dspm_regions
+		joinedDspmRegions := o.bindParamDspmRegions(reg)
+
+		// query array param dspm_regions
+		if err := r.SetQueryParam("dspm_regions", joinedDspmRegions...); err != nil {
+			return err
+		}
+	}
+
+	if o.DspmRole != nil {
+
+		// query param dspm_role
+		var qrDspmRole string
+
+		if o.DspmRole != nil {
+			qrDspmRole = *o.DspmRole
+		}
+		qDspmRole := qrDspmRole
+		if qDspmRole != "" {
+
+			if err := r.SetQueryParam("dspm_role", qDspmRole); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.FalconClientID != nil {
+
+		// query param falcon_client_id
+		var qrFalconClientID string
+
+		if o.FalconClientID != nil {
+			qrFalconClientID = *o.FalconClientID
+		}
+		qFalconClientID := qrFalconClientID
+		if qFalconClientID != "" {
+
+			if err := r.SetQueryParam("falcon_client_id", qFalconClientID); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.IamRoleArn != nil {
+
+		// query param iam_role_arn
+		var qrIamRoleArn string
+
+		if o.IamRoleArn != nil {
+			qrIamRoleArn = *o.IamRoleArn
+		}
+		qIamRoleArn := qrIamRoleArn
+		if qIamRoleArn != "" {
+
+			if err := r.SetQueryParam("iam_role_arn", qIamRoleArn); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.IdpEnabled != nil {
+
+		// query param idp_enabled
+		var qrIdpEnabled string
+
+		if o.IdpEnabled != nil {
+			qrIdpEnabled = *o.IdpEnabled
+		}
+		qIdpEnabled := qrIdpEnabled
+		if qIdpEnabled != "" {
+
+			if err := r.SetQueryParam("idp_enabled", qIdpEnabled); err != nil {
 				return err
 			}
 		}
@@ -357,6 +686,17 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) WriteToRequest(r runtime.Clien
 		}
 	}
 
+	if o.OrganizationalUnitIds != nil {
+
+		// binding items for organizational_unit_ids
+		joinedOrganizationalUnitIds := o.bindParamOrganizationalUnitIds(reg)
+
+		// query array param organizational_unit_ids
+		if err := r.SetQueryParam("organizational_unit_ids", joinedOrganizationalUnitIds...); err != nil {
+			return err
+		}
+	}
+
 	if o.SensorManagementEnabled != nil {
 
 		// query param sensor_management_enabled
@@ -369,6 +709,23 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) WriteToRequest(r runtime.Clien
 		if qSensorManagementEnabled != "" {
 
 			if err := r.SetQueryParam("sensor_management_enabled", qSensorManagementEnabled); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Tags != nil {
+
+		// query param tags
+		var qrTags string
+
+		if o.Tags != nil {
+			qrTags = *o.Tags
+		}
+		qTags := qrTags
+		if qTags != "" {
+
+			if err := r.SetQueryParam("tags", qTags); err != nil {
 				return err
 			}
 		}
@@ -431,6 +788,23 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) bindParamAccounts(formats strf
 	return accountsIS
 }
 
+// bindParamGetD4CAWSAccountScriptsAttachment binds the parameter dspm_regions
+func (o *GetD4CAWSAccountScriptsAttachmentParams) bindParamDspmRegions(formats strfmt.Registry) []string {
+	dspmRegionsIR := o.DspmRegions
+
+	var dspmRegionsIC []string
+	for _, dspmRegionsIIR := range dspmRegionsIR { // explode []string
+
+		dspmRegionsIIV := dspmRegionsIIR // string as string
+		dspmRegionsIC = append(dspmRegionsIC, dspmRegionsIIV)
+	}
+
+	// items.CollectionFormat: "csv"
+	dspmRegionsIS := swag.JoinByFormat(dspmRegionsIC, "csv")
+
+	return dspmRegionsIS
+}
+
 // bindParamGetD4CAWSAccountScriptsAttachment binds the parameter ids
 func (o *GetD4CAWSAccountScriptsAttachmentParams) bindParamIds(formats strfmt.Registry) []string {
 	idsIR := o.Ids
@@ -446,4 +820,21 @@ func (o *GetD4CAWSAccountScriptsAttachmentParams) bindParamIds(formats strfmt.Re
 	idsIS := swag.JoinByFormat(idsIC, "multi")
 
 	return idsIS
+}
+
+// bindParamGetD4CAWSAccountScriptsAttachment binds the parameter organizational_unit_ids
+func (o *GetD4CAWSAccountScriptsAttachmentParams) bindParamOrganizationalUnitIds(formats strfmt.Registry) []string {
+	organizationalUnitIdsIR := o.OrganizationalUnitIds
+
+	var organizationalUnitIdsIC []string
+	for _, organizationalUnitIdsIIR := range organizationalUnitIdsIR { // explode []string
+
+		organizationalUnitIdsIIV := organizationalUnitIdsIIR // string as string
+		organizationalUnitIdsIC = append(organizationalUnitIdsIC, organizationalUnitIdsIIV)
+	}
+
+	// items.CollectionFormat: "csv"
+	organizationalUnitIdsIS := swag.JoinByFormat(organizationalUnitIdsIC, "csv")
+
+	return organizationalUnitIdsIS
 }

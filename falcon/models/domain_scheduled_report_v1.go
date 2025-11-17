@@ -20,6 +20,10 @@ import (
 // swagger:model domain.ScheduledReportV1
 type DomainScheduledReportV1 struct {
 
+	// api client id
+	// Required: true
+	APIClientID *string `json:"api_client_id"`
+
 	// can write
 	CanWrite bool `json:"can_write,omitempty"`
 
@@ -64,6 +68,9 @@ type DomainScheduledReportV1 struct {
 	// Required: true
 	Notifications []*DomainNotifications `json:"notifications"`
 
+	// owned by cs
+	OwnedByCs bool `json:"owned_by_cs,omitempty"`
+
 	// report metadata
 	ReportMetadata *DomainReportMetadata `json:"report_metadata,omitempty"`
 
@@ -74,6 +81,10 @@ type DomainScheduledReportV1 struct {
 	// schedule
 	// Required: true
 	Schedule *DomainSchedule `json:"schedule"`
+
+	// schedule type
+	// Required: true
+	ScheduleType *string `json:"schedule_type"`
 
 	// shared with
 	// Required: true
@@ -90,6 +101,9 @@ type DomainScheduledReportV1 struct {
 	// stop on
 	// Format: date-time
 	StopOn strfmt.DateTime `json:"stop_on,omitempty"`
+
+	// stopped by cs
+	StoppedByCs bool `json:"stopped_by_cs,omitempty"`
 
 	// tracking
 	Tracking string `json:"tracking,omitempty"`
@@ -113,6 +127,10 @@ type DomainScheduledReportV1 struct {
 // Validate validates this domain scheduled report v1
 func (m *DomainScheduledReportV1) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateAPIClientID(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateCreatedOn(formats); err != nil {
 		res = append(res, err)
@@ -166,6 +184,10 @@ func (m *DomainScheduledReportV1) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateScheduleType(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSharedWith(formats); err != nil {
 		res = append(res, err)
 	}
@@ -197,6 +219,15 @@ func (m *DomainScheduledReportV1) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *DomainScheduledReportV1) validateAPIClientID(formats strfmt.Registry) error {
+
+	if err := validate.Required("api_client_id", "body", m.APIClientID); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -386,6 +417,15 @@ func (m *DomainScheduledReportV1) validateSchedule(formats strfmt.Registry) erro
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *DomainScheduledReportV1) validateScheduleType(formats strfmt.Registry) error {
+
+	if err := validate.Required("schedule_type", "body", m.ScheduleType); err != nil {
+		return err
 	}
 
 	return nil

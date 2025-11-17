@@ -32,6 +32,10 @@ type ModelsPod struct {
 	// Required: true
 	AnnotationsList []string `json:"annotations_list"`
 
+	// app name
+	// Required: true
+	AppName *string `json:"app_name"`
+
 	// automount service token
 	// Required: true
 	AutomountServiceToken *bool `json:"automount_service_token"`
@@ -51,6 +55,10 @@ type ModelsPod struct {
 	// cloud region
 	// Required: true
 	CloudRegion *string `json:"cloud_region"`
+
+	// cloud service
+	// Required: true
+	CloudService *string `json:"cloud_service"`
 
 	// cluster id
 	// Required: true
@@ -102,6 +110,10 @@ type ModelsPod struct {
 	// ipv6
 	// Required: true
 	IPV6 *string `json:"ipv6"`
+
+	// kac agent id
+	// Required: true
+	KacAgentID *string `json:"kac_agent_id"`
 
 	// labels
 	// Required: true
@@ -163,6 +175,10 @@ type ModelsPod struct {
 	// Required: true
 	Privileged *bool `json:"privileged"`
 
+	// resource status
+	// Required: true
+	ResourceStatus *string `json:"resource_status"`
+
 	// root write access
 	// Required: true
 	RootWriteAccess *bool `json:"root_write_access"`
@@ -208,6 +224,10 @@ func (m *ModelsPod) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAppName(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAutomountServiceToken(formats); err != nil {
 		res = append(res, err)
 	}
@@ -225,6 +245,10 @@ func (m *ModelsPod) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCloudRegion(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCloudService(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -273,6 +297,10 @@ func (m *ModelsPod) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateIPV6(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateKacAgentID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -333,6 +361,10 @@ func (m *ModelsPod) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePrivileged(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResourceStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -412,6 +444,15 @@ func (m *ModelsPod) validateAnnotationsList(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ModelsPod) validateAppName(formats strfmt.Registry) error {
+
+	if err := validate.Required("app_name", "body", m.AppName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *ModelsPod) validateAutomountServiceToken(formats strfmt.Registry) error {
 
 	if err := validate.Required("automount_service_token", "body", m.AutomountServiceToken); err != nil {
@@ -451,6 +492,15 @@ func (m *ModelsPod) validateCloudName(formats strfmt.Registry) error {
 func (m *ModelsPod) validateCloudRegion(formats strfmt.Registry) error {
 
 	if err := validate.Required("cloud_region", "body", m.CloudRegion); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ModelsPod) validateCloudService(formats strfmt.Registry) error {
+
+	if err := validate.Required("cloud_service", "body", m.CloudService); err != nil {
 		return err
 	}
 
@@ -574,6 +624,15 @@ func (m *ModelsPod) validateIPV4(formats strfmt.Registry) error {
 func (m *ModelsPod) validateIPV6(formats strfmt.Registry) error {
 
 	if err := validate.Required("ipv6", "body", m.IPV6); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ModelsPod) validateKacAgentID(formats strfmt.Registry) error {
+
+	if err := validate.Required("kac_agent_id", "body", m.KacAgentID); err != nil {
 		return err
 	}
 
@@ -724,6 +783,15 @@ func (m *ModelsPod) validatePorts(formats strfmt.Registry) error {
 func (m *ModelsPod) validatePrivileged(formats strfmt.Registry) error {
 
 	if err := validate.Required("privileged", "body", m.Privileged); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ModelsPod) validateResourceStatus(formats strfmt.Registry) error {
+
+	if err := validate.Required("resource_status", "body", m.ResourceStatus); err != nil {
 		return err
 	}
 

@@ -32,6 +32,12 @@ type DomainScanV2 struct {
 	// cloud ml level prevention
 	CloudMlLevelPrevention int32 `json:"cloud_ml_level_prevention,omitempty"`
 
+	// cloud pup adware level detection
+	CloudPupAdwareLevelDetection int32 `json:"cloud_pup_adware_level_detection,omitempty"`
+
+	// cloud pup adware level prevention
+	CloudPupAdwareLevelPrevention int32 `json:"cloud_pup_adware_level_prevention,omitempty"`
+
 	// completed host count
 	// Required: true
 	CompletedHostCount *int32 `json:"completed_host_count"`
@@ -81,9 +87,6 @@ type DomainScanV2 struct {
 
 	// max duration
 	MaxDuration int32 `json:"max_duration,omitempty"`
-
-	// max file size
-	MaxFileSize int32 `json:"max_file_size,omitempty"`
 
 	// metadata
 	Metadata []string `json:"metadata"`

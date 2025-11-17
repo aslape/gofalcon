@@ -6,6 +6,8 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"fmt"
+
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 )
@@ -28,32 +30,34 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	ContainerEnrichment(params *ContainerEnrichmentParams, opts ...ClientOption) error
+	CombinedQueryInstalledPatches(params *CombinedQueryInstalledPatchesParams, opts ...ClientOption) (*CombinedQueryInstalledPatchesOK, error)
 
-	DeploymentEnrichment(params *DeploymentEnrichmentParams, opts ...ClientOption) error
+	PostGraphqlQueryMixin0(params *PostGraphqlQueryMixin0Params, opts ...ClientOption) (*PostGraphqlQueryMixin0OK, error)
 
-	PodEnrichment(params *PodEnrichmentParams, opts ...ClientOption) error
+	V1HostConfigsPost(params *V1HostConfigsPostParams, opts ...ClientOption) (*V1HostConfigsPostOK, *V1HostConfigsPostAccepted, error)
+
+	V1StatusGet(params *V1StatusGetParams, opts ...ClientOption) (*V1StatusGetOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-ContainerEnrichment container enrichment API
+CombinedQueryInstalledPatches gets installed patches information for hosts
 */
-func (a *Client) ContainerEnrichment(params *ContainerEnrichmentParams, opts ...ClientOption) error {
+func (a *Client) CombinedQueryInstalledPatches(params *CombinedQueryInstalledPatchesParams, opts ...ClientOption) (*CombinedQueryInstalledPatchesOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewContainerEnrichmentParams()
+		params = NewCombinedQueryInstalledPatchesParams()
 	}
 	op := &runtime.ClientOperation{
-		ID:                 "ContainerEnrichment",
+		ID:                 "combinedQueryInstalledPatches",
 		Method:             "GET",
-		PathPattern:        "/container-security/aggregates/enrichment/containers/entities/v1",
+		PathPattern:        "/spotlight/combined/installed-patches/v1",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &ContainerEnrichmentReader{formats: a.formats},
+		Reader:             &CombinedQueryInstalledPatchesReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -61,30 +65,37 @@ func (a *Client) ContainerEnrichment(params *ContainerEnrichmentParams, opts ...
 		opt(op)
 	}
 
-	_, err := a.transport.Submit(op)
+	result, err := a.transport.Submit(op)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	success, ok := result.(*CombinedQueryInstalledPatchesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for combinedQueryInstalledPatches: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
-DeploymentEnrichment deployment enrichment API
+PostGraphqlQueryMixin0 - request graphql query
 */
-func (a *Client) DeploymentEnrichment(params *DeploymentEnrichmentParams, opts ...ClientOption) error {
+func (a *Client) PostGraphqlQueryMixin0(params *PostGraphqlQueryMixin0Params, opts ...ClientOption) (*PostGraphqlQueryMixin0OK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDeploymentEnrichmentParams()
+		params = NewPostGraphqlQueryMixin0Params()
 	}
 	op := &runtime.ClientOperation{
-		ID:                 "DeploymentEnrichment",
-		Method:             "GET",
-		PathPattern:        "/container-security/aggregates/enrichment/deployments/entities/v1",
+		ID:                 "post-graphql-queryMixin0",
+		Method:             "POST",
+		PathPattern:        "/cloud-data-protection/entities/schedules/graphql/v2",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &DeploymentEnrichmentReader{formats: a.formats},
+		Reader:             &PostGraphqlQueryMixin0Reader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -92,30 +103,37 @@ func (a *Client) DeploymentEnrichment(params *DeploymentEnrichmentParams, opts .
 		opt(op)
 	}
 
-	_, err := a.transport.Submit(op)
+	result, err := a.transport.Submit(op)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	success, ok := result.(*PostGraphqlQueryMixin0OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for post-graphql-queryMixin0: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
-PodEnrichment pod enrichment API
+V1HostConfigsPost configures all hosts in the provided host group to be ready to accept an execute API call
 */
-func (a *Client) PodEnrichment(params *PodEnrichmentParams, opts ...ClientOption) error {
+func (a *Client) V1HostConfigsPost(params *V1HostConfigsPostParams, opts ...ClientOption) (*V1HostConfigsPostOK, *V1HostConfigsPostAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewPodEnrichmentParams()
+		params = NewV1HostConfigsPostParams()
 	}
 	op := &runtime.ClientOperation{
-		ID:                 "PodEnrichment",
-		Method:             "GET",
-		PathPattern:        "/container-security/aggregates/enrichment/pods/entities/v1",
+		ID:                 "v1.host-configs.post",
+		Method:             "POST",
+		PathPattern:        "/pluginsonprem/entities/host-configs/v1",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &PodEnrichmentReader{formats: a.formats},
+		Reader:             &V1HostConfigsPostReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -123,11 +141,57 @@ func (a *Client) PodEnrichment(params *PodEnrichmentParams, opts ...ClientOption
 		opt(op)
 	}
 
-	_, err := a.transport.Submit(op)
+	result, err := a.transport.Submit(op)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
-	return nil
+	switch value := result.(type) {
+	case *V1HostConfigsPostOK:
+		return value, nil, nil
+	case *V1HostConfigsPostAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for operations: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+V1StatusGet fetches the host configs within the provided host group
+*/
+func (a *Client) V1StatusGet(params *V1StatusGetParams, opts ...ClientOption) (*V1StatusGetOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewV1StatusGetParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "v1.status.get",
+		Method:             "GET",
+		PathPattern:        "/pluginsonprem/entities/host-configs/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &V1StatusGetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*V1StatusGetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for v1.status.get: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 // SetTransport changes the transport on the client

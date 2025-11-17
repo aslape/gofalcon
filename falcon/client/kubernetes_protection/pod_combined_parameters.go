@@ -64,25 +64,60 @@ type PodCombinedParams struct {
 
 	/* Filter.
 
-	   Search Kubernetes pods using a query in Falcon Query Language (FQL). Supported filters:  agent_id,agent_type,allow_privilege_escalation,annotations_list,cid,cloud_account_id,cloud_name,cloud_region,cluster_id,cluster_name,container_count,ipv4,ipv6,labels,last_seen,namespace,node_name,node_uid,owner_id,owner_type,pod_external_id,pod_id,pod_name,port,privileged,root_write_access,run_as_root_group,run_as_root_user
+	     Search Kubernetes pods using a query in Falcon Query Language (FQL). Supported filter fields:
+	- `agent_id`
+	- `agent_type`
+	- `allow_privilege_escalation`
+	- `annotations_list`
+	- `app_name`
+	- `cid`
+	- `cloud_account_id`
+	- `cloud_name`
+	- `cloud_region`
+	- `cloud_service`
+	- `cluster_id`
+	- `cluster_name`
+	- `container_count`
+	- `first_seen`
+	- `ipv4`
+	- `ipv6`
+	- `kac_agent_id`
+	- `labels`
+	- `last_seen`
+	- `namespace`
+	- `node_name`
+	- `node_uid`
+	- `owner_id`
+	- `owner_type`
+	- `pod_external_id`
+	- `pod_id`
+	- `pod_name`
+	- `port`
+	- `privileged`
+	- `resource_status`
+	- `root_write_access`
+	- `run_as_root_group`
+	- `run_as_root_user`
 	*/
 	Filter *string
 
 	/* Limit.
 
-	   The upper-bound on the number of records to retrieve.
+	   The upper-bound on the number of records to retrieve. Maximum limit: 200.
+
+	   Default: 200
 	*/
 	Limit *int64
 
 	/* Offset.
 
-	   The offset from where to begin.
+	   The offset from where to begin. Maximum offset = 10000 - limit.
 	*/
 	Offset *int64
 
 	/* Sort.
 
-	   Field to sort results by
+	   The fields to sort the records on.
 	*/
 	Sort *string
 
@@ -103,7 +138,18 @@ func (o *PodCombinedParams) WithDefaults() *PodCombinedParams {
 //
 // All values with no default are reset to their zero value.
 func (o *PodCombinedParams) SetDefaults() {
-	// no default values defined for this parameter
+	var (
+		limitDefault = int64(200)
+	)
+
+	val := PodCombinedParams{
+		Limit: &limitDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the pod combined params

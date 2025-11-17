@@ -48,6 +48,8 @@ type ClientService interface {
 
 	ContainerCountByRegistry(params *ContainerCountByRegistryParams, opts ...ClientOption) (*ContainerCountByRegistryOK, error)
 
+	ContainerEnrichment(params *ContainerEnrichmentParams, opts ...ClientOption) (*ContainerEnrichmentOK, error)
+
 	ContainerImageDetectionsCountByDate(params *ContainerImageDetectionsCountByDateParams, opts ...ClientOption) (*ContainerImageDetectionsCountByDateOK, error)
 
 	ContainerImagesByMostUsed(params *ContainerImagesByMostUsedParams, opts ...ClientOption) (*ContainerImagesByMostUsedOK, error)
@@ -71,6 +73,8 @@ type ClientService interface {
 	DeploymentCombined(params *DeploymentCombinedParams, opts ...ClientOption) (*DeploymentCombinedOK, error)
 
 	DeploymentCount(params *DeploymentCountParams, opts ...ClientOption) (*DeploymentCountOK, error)
+
+	DeploymentEnrichment(params *DeploymentEnrichmentParams, opts ...ClientOption) (*DeploymentEnrichmentOK, error)
 
 	DeploymentsByDateRangeCount(params *DeploymentsByDateRangeCountParams, opts ...ClientOption) (*DeploymentsByDateRangeCountOK, error)
 
@@ -128,9 +132,19 @@ type ClientService interface {
 
 	PodCount(params *PodCountParams, opts ...ClientOption) (*PodCountOK, error)
 
+	PodEnrichment(params *PodEnrichmentParams, opts ...ClientOption) (*PodEnrichmentOK, error)
+
 	PodsByDateRangeCount(params *PodsByDateRangeCountParams, opts ...ClientOption) (*PodsByDateRangeCountOK, error)
 
+	PostSearchKubernetesIOMEntities(params *PostSearchKubernetesIOMEntitiesParams, opts ...ClientOption) (*PostSearchKubernetesIOMEntitiesOK, error)
+
 	QueryKubernetesIoms(params *QueryKubernetesIomsParams, opts ...ClientOption) (*QueryKubernetesIomsOK, error)
+
+	ReadClusterCombinedV2(params *ReadClusterCombinedV2Params, opts ...ClientOption) (*ReadClusterCombinedV2OK, error)
+
+	ReadNamespaceCount(params *ReadNamespaceCountParams, opts ...ClientOption) (*ReadNamespaceCountOK, error)
+
+	ReadNamespacesByDateRangeCount(params *ReadNamespacesByDateRangeCountParams, opts ...ClientOption) (*ReadNamespacesByDateRangeCountOK, error)
 
 	RegenerateAPIKey(params *RegenerateAPIKeyParams, opts ...ClientOption) (*RegenerateAPIKeyOK, *RegenerateAPIKeyMultiStatus, error)
 
@@ -374,7 +388,7 @@ func (a *Client) ClustersByStatusCount(params *ClustersByStatusCountParams, opts
 }
 
 /*
-ContainerCombined retrieves containers identified by the provided filter criteria
+ContainerCombined retrieves a paginated list of containers identified by the provided filter criteria maximum page size 200 maximum available containers 10 000
 */
 func (a *Client) ContainerCombined(params *ContainerCombinedParams, opts ...ClientOption) (*ContainerCombinedOK, error) {
 	// TODO: Validate the params before sending
@@ -450,7 +464,7 @@ func (a *Client) ContainerCount(params *ContainerCountParams, opts ...ClientOpti
 }
 
 /*
-ContainerCountByRegistry retrieves top container image registries
+ContainerCountByRegistry retrieves a list with the top container image registries maximum page size 200
 */
 func (a *Client) ContainerCountByRegistry(params *ContainerCountByRegistryParams, opts ...ClientOption) (*ContainerCountByRegistryOK, error) {
 	// TODO: Validate the params before sending
@@ -484,6 +498,44 @@ func (a *Client) ContainerCountByRegistry(params *ContainerCountByRegistryParams
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for ContainerCountByRegistry: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+ContainerEnrichment retrieves container enrichment data
+*/
+func (a *Client) ContainerEnrichment(params *ContainerEnrichmentParams, opts ...ClientOption) (*ContainerEnrichmentOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewContainerEnrichmentParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "ContainerEnrichment",
+		Method:             "GET",
+		PathPattern:        "/container-security/aggregates/enrichment/containers/entities/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ContainerEnrichmentReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ContainerEnrichmentOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for ContainerEnrichment: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -948,6 +1000,44 @@ func (a *Client) DeploymentCount(params *DeploymentCountParams, opts ...ClientOp
 }
 
 /*
+DeploymentEnrichment retrieves deployment enrichment data
+*/
+func (a *Client) DeploymentEnrichment(params *DeploymentEnrichmentParams, opts ...ClientOption) (*DeploymentEnrichmentOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeploymentEnrichmentParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "DeploymentEnrichment",
+		Method:             "GET",
+		PathPattern:        "/container-security/aggregates/enrichment/deployments/entities/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeploymentEnrichmentReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeploymentEnrichmentOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for DeploymentEnrichment: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
 DeploymentsByDateRangeCount retrieves deployments by date range counts
 */
 func (a *Client) DeploymentsByDateRangeCount(params *DeploymentsByDateRangeCountParams, opts ...ClientOption) (*DeploymentsByDateRangeCountOK, error) {
@@ -1345,7 +1435,7 @@ func (a *Client) GetHelmValuesYaml(params *GetHelmValuesYamlParams, opts ...Clie
 		ID:                 "GetHelmValuesYaml",
 		Method:             "GET",
 		PathPattern:        "/kubernetes-protection/entities/integration/agent/v1",
-		ProducesMediaTypes: []string{"application/yaml"},
+		ProducesMediaTypes: []string{"application/json", "application/yaml"},
 		ConsumesMediaTypes: []string{"application/json", "application/octet-stream"},
 		Schemes:            []string{"https"},
 		Params:             params,
@@ -1602,7 +1692,7 @@ func (a *Client) KubernetesIomEntities(params *KubernetesIomEntitiesParams, opts
 }
 
 /*
-KubernetesIomEntitiesCombined searches kubernetes i o m by the provided search criteria
+KubernetesIomEntitiesCombined retrieves a list of kubernetes i o ms identified by the provided search criteria maximum page size 100 maximum available kubernetes i o ms 10 000
 */
 func (a *Client) KubernetesIomEntitiesCombined(params *KubernetesIomEntitiesCombinedParams, opts ...ClientOption) (*KubernetesIomEntitiesCombinedOK, error) {
 	// TODO: Validate the params before sending
@@ -2022,6 +2112,44 @@ func (a *Client) PodCount(params *PodCountParams, opts ...ClientOption) (*PodCou
 }
 
 /*
+PodEnrichment retrieves pod enrichment data
+*/
+func (a *Client) PodEnrichment(params *PodEnrichmentParams, opts ...ClientOption) (*PodEnrichmentOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPodEnrichmentParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PodEnrichment",
+		Method:             "GET",
+		PathPattern:        "/container-security/aggregates/enrichment/pods/entities/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PodEnrichmentReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PodEnrichmentOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PodEnrichment: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
 PodsByDateRangeCount retrieves pods by date range counts
 */
 func (a *Client) PodsByDateRangeCount(params *PodsByDateRangeCountParams, opts ...ClientOption) (*PodsByDateRangeCountOK, error) {
@@ -2060,6 +2188,44 @@ func (a *Client) PodsByDateRangeCount(params *PodsByDateRangeCountParams, opts .
 }
 
 /*
+PostSearchKubernetesIOMEntities searches for kubernetes i o ms with filtering options pagination is supported via elasticsearch s search after search param and point in time assets are sorted by unique ID in ascending direction
+*/
+func (a *Client) PostSearchKubernetesIOMEntities(params *PostSearchKubernetesIOMEntitiesParams, opts ...ClientOption) (*PostSearchKubernetesIOMEntitiesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostSearchKubernetesIOMEntitiesParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "PostSearchKubernetesIOMEntities",
+		Method:             "POST",
+		PathPattern:        "/container-security/combined/kubernetes-ioms/search/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PostSearchKubernetesIOMEntitiesReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PostSearchKubernetesIOMEntitiesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for PostSearchKubernetesIOMEntities: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
 QueryKubernetesIoms searches kubernetes i o ms by the provided search criteria this endpoint returns a list of kubernetes i o m u UI ds matching the query
 */
 func (a *Client) QueryKubernetesIoms(params *QueryKubernetesIomsParams, opts ...ClientOption) (*QueryKubernetesIomsOK, error) {
@@ -2094,6 +2260,120 @@ func (a *Client) QueryKubernetesIoms(params *QueryKubernetesIomsParams, opts ...
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for QueryKubernetesIoms: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+ReadClusterCombinedV2 retrieves kubernetes cluster data
+*/
+func (a *Client) ReadClusterCombinedV2(params *ReadClusterCombinedV2Params, opts ...ClientOption) (*ReadClusterCombinedV2OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewReadClusterCombinedV2Params()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "ReadClusterCombinedV2",
+		Method:             "GET",
+		PathPattern:        "/container-security/combined/clusters/v2",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ReadClusterCombinedV2Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ReadClusterCombinedV2OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for ReadClusterCombinedV2: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+ReadNamespaceCount retrieves namespace counts
+*/
+func (a *Client) ReadNamespaceCount(params *ReadNamespaceCountParams, opts ...ClientOption) (*ReadNamespaceCountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewReadNamespaceCountParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "ReadNamespaceCount",
+		Method:             "GET",
+		PathPattern:        "/container-security/aggregates/namespaces/count/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ReadNamespaceCountReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ReadNamespaceCountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for ReadNamespaceCount: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+ReadNamespacesByDateRangeCount retrieves namespaces by date range counts
+*/
+func (a *Client) ReadNamespacesByDateRangeCount(params *ReadNamespacesByDateRangeCountParams, opts ...ClientOption) (*ReadNamespacesByDateRangeCountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewReadNamespacesByDateRangeCountParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "ReadNamespacesByDateRangeCount",
+		Method:             "GET",
+		PathPattern:        "/container-security/aggregates/namespaces/count-by-date/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ReadNamespacesByDateRangeCountReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ReadNamespacesByDateRangeCountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for ReadNamespacesByDateRangeCount: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

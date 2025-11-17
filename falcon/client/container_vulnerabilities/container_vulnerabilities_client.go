@@ -54,7 +54,7 @@ type ClientService interface {
 }
 
 /*
-ReadCombinedVulnerabilities retrieves vulnerability and aggregate data filtered by the provided f q l
+ReadCombinedVulnerabilities retrieves a paginated list of vulnerabilities filtered by the provided f q l maximum page size 100 maximum available vulnerabilities 10 000
 */
 func (a *Client) ReadCombinedVulnerabilities(params *ReadCombinedVulnerabilitiesParams, opts ...ClientOption) (*ReadCombinedVulnerabilitiesOK, error) {
 	// TODO: Validate the params before sending
@@ -358,7 +358,7 @@ func (a *Client) ReadVulnerabilityCountByCPSRating(params *ReadVulnerabilityCoun
 }
 
 /*
-ReadVulnerabilityCountByCVSSScore aggregates count of vulnerabilities grouped by cvss score
+ReadVulnerabilityCountByCVSSScore aggregates count of vulnerabilities grouped by c v s s score
 */
 func (a *Client) ReadVulnerabilityCountByCVSSScore(params *ReadVulnerabilityCountByCVSSScoreParams, opts ...ClientOption) (*ReadVulnerabilityCountByCVSSScoreOK, error) {
 	// TODO: Validate the params before sending

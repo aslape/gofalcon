@@ -17,11 +17,11 @@ import (
 // swagger:model graph.Condition
 type GraphCondition struct {
 
-	// User friendly description of the FQL expression. This would be supplied by the UI/caller and is not set by the API.
-	Display []string `json:"display"`
+	// CEL expression for the condition, should evaluate to a boolean.
+	CelExpression string `json:"cel_expression,omitempty"`
 
-	// Indicates the boolean result of FQL expression when present. This field should be used only in the api response of a graph execution result
-	Evaluated bool `json:"evaluated,omitempty"`
+	// User friendly description of the expression. This is generally supplied by the UI/caller.
+	Display []string `json:"display"`
 
 	// FQL expression for the condition on the sequence flow.
 	Expression string `json:"expression,omitempty"`

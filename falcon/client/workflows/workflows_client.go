@@ -34,7 +34,7 @@ type ClientService interface {
 
 	Execute(params *ExecuteParams, opts ...ClientOption) (*ExecuteOK, error)
 
-	ExecutionAction(params *ExecutionActionParams, opts ...ClientOption) (*ExecutionActionOK, error)
+	ExecutionAction(params *ExecutionActionParams, opts ...ClientOption) (*ExecutionActionOK, *ExecutionActionAccepted, error)
 
 	ExecutionResults(params *ExecutionResultsParams, opts ...ClientOption) (*ExecutionResultsOK, error)
 
@@ -43,6 +43,10 @@ type ClientService interface {
 	Provision(params *ProvisionParams, opts ...ClientOption) (*ProvisionOK, error)
 
 	WorkflowActivitiesCombined(params *WorkflowActivitiesCombinedParams, opts ...ClientOption) (*WorkflowActivitiesCombinedOK, error)
+
+	WorkflowActivitiesContentCombined(params *WorkflowActivitiesContentCombinedParams, opts ...ClientOption) (*WorkflowActivitiesContentCombinedOK, error)
+
+	WorkflowDefinitionsAction(params *WorkflowDefinitionsActionParams, opts ...ClientOption) (*WorkflowDefinitionsActionOK, *WorkflowDefinitionsActionAccepted, error)
 
 	WorkflowDefinitionsCombined(params *WorkflowDefinitionsCombinedParams, opts ...ClientOption) (*WorkflowDefinitionsCombinedOK, error)
 
@@ -144,9 +148,9 @@ func (a *Client) Execute(params *ExecuteParams, opts ...ClientOption) (*ExecuteO
 }
 
 /*
-ExecutionAction allows a user to resume retry a failed workflow execution
+ExecutionAction allows a user to resume retry a failed workflow execution or cancel stop a currently running workflow execution
 */
-func (a *Client) ExecutionAction(params *ExecutionActionParams, opts ...ClientOption) (*ExecutionActionOK, error) {
+func (a *Client) ExecutionAction(params *ExecutionActionParams, opts ...ClientOption) (*ExecutionActionOK, *ExecutionActionAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewExecutionActionParams()
@@ -169,15 +173,16 @@ func (a *Client) ExecutionAction(params *ExecutionActionParams, opts ...ClientOp
 
 	result, err := a.transport.Submit(op)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	success, ok := result.(*ExecutionActionOK)
-	if ok {
-		return success, nil
+	switch value := result.(type) {
+	case *ExecutionActionOK:
+		return value, nil, nil
+	case *ExecutionActionAccepted:
+		return nil, value, nil
 	}
-	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for ExecutionAction: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for workflows: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -334,7 +339,84 @@ func (a *Client) WorkflowActivitiesCombined(params *WorkflowActivitiesCombinedPa
 }
 
 /*
-WorkflowDefinitionsCombined searches workflow definitions based on the provided filter
+WorkflowActivitiesContentCombined searches for activities by name returns all supported activities if no filter specified
+*/
+func (a *Client) WorkflowActivitiesContentCombined(params *WorkflowActivitiesContentCombinedParams, opts ...ClientOption) (*WorkflowActivitiesContentCombinedOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewWorkflowActivitiesContentCombinedParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "WorkflowActivitiesContentCombined",
+		Method:             "GET",
+		PathPattern:        "/workflows/combined/activity-content/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &WorkflowActivitiesContentCombinedReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*WorkflowActivitiesContentCombinedOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for WorkflowActivitiesContentCombined: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+WorkflowDefinitionsAction enables or disable a workflow definition or stop all executions for a definition when a definition is disabled it will not execute against any new trigger events
+*/
+func (a *Client) WorkflowDefinitionsAction(params *WorkflowDefinitionsActionParams, opts ...ClientOption) (*WorkflowDefinitionsActionOK, *WorkflowDefinitionsActionAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewWorkflowDefinitionsActionParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "WorkflowDefinitionsAction",
+		Method:             "POST",
+		PathPattern:        "/workflows/entities/definition-actions/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &WorkflowDefinitionsActionReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *WorkflowDefinitionsActionOK:
+		return value, nil, nil
+	case *WorkflowDefinitionsActionAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for workflows: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+WorkflowDefinitionsCombined searches workflow definitions based on the provided filter n o t e this API has a large response payload click on wait if the page is unresponsive during loading
 */
 func (a *Client) WorkflowDefinitionsCombined(params *WorkflowDefinitionsCombinedParams, opts ...ClientOption) (*WorkflowDefinitionsCombinedOK, error) {
 	// TODO: Validate the params before sending
@@ -383,7 +465,7 @@ func (a *Client) WorkflowDefinitionsExport(params *WorkflowDefinitionsExportPara
 		ID:                 "WorkflowDefinitionsExport",
 		Method:             "GET",
 		PathPattern:        "/workflows/entities/definitions/export/v1",
-		ProducesMediaTypes: []string{"application/yaml"},
+		ProducesMediaTypes: []string{"application/json", "application/yaml"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,

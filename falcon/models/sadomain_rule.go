@@ -31,6 +31,9 @@ type SadomainRule struct {
 	// Required: true
 	Cid *string `json:"cid"`
 
+	// The UUID of the user that created a given rule or Crowdstrike if the rule was system generated
+	CreatedBy string `json:"created_by,omitempty"`
+
 	// The creation time for a given rule
 	// Required: true
 	// Format: date-time
@@ -43,6 +46,10 @@ type SadomainRule struct {
 	// The ID of a given rule
 	// Required: true
 	ID *string `json:"id"`
+
+	// Which result types to monitor for. Can be set to only monitor domains or subdomains, as well as both. Only available for the `Typosquatting` rule topic.
+	// Required: true
+	MatchOnTsqResultTypes []string `json:"match_on_tsq_result_types"`
 
 	// The name of a given rule
 	// Required: true
@@ -72,6 +79,9 @@ type SadomainRule struct {
 	// Whether to monitor for substring matches. Only available for the `Typosquatting` rule topic
 	// Required: true
 	SubstringMatchingEnabled *bool `json:"substring_matching_enabled"`
+
+	// template priority
+	TemplatePriority int32 `json:"template_priority,omitempty"`
 
 	// The topic of a given rule
 	// Required: true
@@ -118,6 +128,10 @@ func (m *SadomainRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMatchOnTsqResultTypes(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -215,6 +229,15 @@ func (m *SadomainRule) validateFilter(formats strfmt.Registry) error {
 func (m *SadomainRule) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", m.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SadomainRule) validateMatchOnTsqResultTypes(formats strfmt.Registry) error {
+
+	if err := validate.Required("match_on_tsq_result_types", "body", m.MatchOnTsqResultTypes); err != nil {
 		return err
 	}
 

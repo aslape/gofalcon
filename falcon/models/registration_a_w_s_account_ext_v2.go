@@ -33,6 +33,21 @@ type RegistrationAWSAccountExtV2 struct {
 	// Required: true
 	CloudtrailRegion *string `json:"cloudtrail_region"`
 
+	// deployment method
+	DeploymentMethod string `json:"deployment_method,omitempty"`
+
+	// dspm enabled
+	DspmEnabled bool `json:"dspm_enabled,omitempty"`
+
+	// dspm host account id
+	DspmHostAccountID string `json:"dspm_host_account_id,omitempty"`
+
+	// dspm role
+	DspmRole string `json:"dspm_role,omitempty"`
+
+	// falcon client id
+	FalconClientID string `json:"falcon_client_id,omitempty"`
+
 	// iam role arn
 	// Required: true
 	IamRoleArn *string `json:"iam_role_arn"`
@@ -44,6 +59,9 @@ type RegistrationAWSAccountExtV2 struct {
 	// Required: true
 	OrganizationID *string `json:"organization_id"`
 
+	// root stack id
+	RootStackID string `json:"root_stack_id,omitempty"`
+
 	// sensor management enabled
 	SensorManagementEnabled bool `json:"sensor_management_enabled,omitempty"`
 
@@ -52,6 +70,15 @@ type RegistrationAWSAccountExtV2 struct {
 
 	// use existing cloudtrail
 	UseExistingCloudtrail bool `json:"use_existing_cloudtrail,omitempty"`
+
+	// vulnerability scanning enabled
+	VulnerabilityScanningEnabled bool `json:"vulnerability_scanning_enabled,omitempty"`
+
+	// vulnerability scanning host account id
+	VulnerabilityScanningHostAccountID string `json:"vulnerability_scanning_host_account_id,omitempty"`
+
+	// vulnerability scanning role
+	VulnerabilityScanningRole string `json:"vulnerability_scanning_role,omitempty"`
 }
 
 // Validate validates this registration a w s account ext v2
